@@ -17,7 +17,8 @@ let timer = 20;
 // --- Root renderer --------------------------------------------------------
 function render() {
     app.innerHTML = "";
-    const map = { home, wizard, lobby, game, gameover };
+    // map of screen renderers
+    const map = { home, wizard, lobby, game, gameover: gameOver }; // alias gameover key to gameOver function
     map[state.screen]();
 }
 
