@@ -1,0 +1,30 @@
+:root {
+    --bg: #f6f7f9;
+    --fg: #1f2024;
+    --card: #ffffff;
+    --accent: #4f46e5;
+}
+body.dark {
+    --bg: #1f2024;
+    --fg: #f6f7f9;
+    --card: #2a2b30;
+}
+* { box-sizing: border-box; font-family: system-ui, sans-serif; }
+body {
+    margin: 0; display: flex; justify-content: center; align-items: center;
+    background: var(--bg); color: var(--fg); height: 100vh;
+}
+.card {
+    background: var(--card); padding: 2rem; border-radius: 1rem; box-shadow: 0 4px 12px rgba(0,0,0,.1); width: 100%; max-width: 500px;
+}
+button {
+    width: 100%; padding: 0.8rem 1rem; margin-top: 0.5rem; font-size: 1rem;
+    border: none; border-radius: 0.5rem; cursor: pointer; background: var(--accent); color: #fff;
+}
+button.secondary { background: transparent; color: var(--fg); border: 2px solid var(--accent); }
+button[disabled] { opacity: 0.5; cursor: not-allowed; }
+.input { width: 100%; padding: 0.8rem; margin-top: 0.5rem; border: 2px solid var(--accent); border-radius: 0.5rem; background: transparent; color: var(--fg); }
+.list { list-style: none; padding: 0; margin: 0; }
+.list li { padding: 0.25rem 0; display: flex; justify-content: space-between; }
+.timer { font-size: 2rem; text-align: center; margin: 1rem 0; }
+.toggle-theme { position: absolute; top: 1rem; right: 1rem; cursor: pointer; }

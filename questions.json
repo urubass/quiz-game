@@ -1,0 +1,52 @@
+[
+  {
+    "text": "Které město je hlavním městem Austrálie?",
+    "choices": ["Sydney", "Canberra", "Melbourne", "Perth"],
+    "correct": 1
+  },
+  {
+    "text": "Kolik planet má Sluneční soustava?",
+    "choices": ["7", "8", "9", "10"],
+    "correct": 1
+  },
+  {
+    "text": "Který prvek má chemickou značku Fe?",
+    "choices": ["Fosfor", "Francium", "Železo", "Fluor"],
+    "correct": 2
+  },
+  {
+    "text": "V jakém roce přistála první lidská posádka na Měsíci?",
+    "choices": ["1965", "1969", "1972", "1975"],
+    "correct": 1
+  },
+  {
+    "text": "Kdo napsal román '1984'?",
+    "choices": ["George Orwell", "Aldous Huxley", "Ray Bradbury", "Jules Verne"],
+    "correct": 0
+  },
+  {
+    "text": "Kolik je 12 × 8?",
+    "choices": ["80", "88", "96", "108"],
+    "correct": 2
+  },
+  {
+    "text": "Nejvyšší hora České republiky je?",
+    "choices": ["Sněžka", "Praděd", "Lysá hora", "Gerlach"],
+    "correct": 0
+  },
+  {
+    "text": "Který jazyk je mateřským jazykem nejvíce lidí na světě?",
+    "choices": ["Angličtina", "Španělština", "Čínština (mandarínština)", "Hindština"],
+    "correct": 2
+  },
+  {
+    "text": "Kolik minut má jeden den?",
+    "choices": ["1440", "1380", "1500", "1600"],
+    "correct": 0
+  },
+  {
+    "text": "Kdo složil Beethovenovu 9. symfonii?",
+    "choices": ["Johann Sebastian Bach", "Ludwig van Beethoven", "Wolfgang Amadeus Mozart", "Franz Schubert"],
+    "correct": 1
+  }
+]
