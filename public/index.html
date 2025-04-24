@@ -3,12 +3,34 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Online Kvízová Hra</title>
+    <title>Dobyvatel ČR</title>
     <link rel="stylesheet" href="style.css" />
+    <!-- Přidání fontu Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="/socket.io/socket.io.js"></script>
 </head>
 <body class="light">
-<div id="app"></div>
+<!-- Hlavní kontejner aplikace -->
+<div id="app">
+    <!-- App content is rendered here by script.js -->
+</div>
+
+<!-- Modální okno pro otázky (mimo #app) -->
+<div id="question-modal" class="modal">
+    <div class="modal-content">
+        <div id="modal-question-area">
+            <!-- Question content will be rendered here -->
+            <h2>Otázka</h2>
+            <div id="modal-question-timer"></div>
+            <div id="modal-question-text"></div>
+            <div id="modal-answer-options"></div>
+            <div id="modal-question-feedback"></div>
+        </div>
+    </div>
+</div>
+
 <script src="script.js"></script>
 </body>
 </html>

@@ -1,30 +1,492 @@
 :root {
-    --bg: #f6f7f9;
-    --fg: #1f2024;
-    --card: #ffffff;
-    --accent: #4f46e5;
+    --bg-light: #f0f2f5;
+    --fg-light: #1f1f24;
+    --card-light: #ffffff;
+    --accent-light: #2563eb; /* Modrá */
+    --accent-hover-light: #1d4ed8;
+    --secondary-light: #e5e7eb;
+    --secondary-fg-light: #4b5563;
+    --region-free: #e5e7eb;
+    --region-hover: #cbd5e1; /* Světlejší šedá pro hover */
+    --region-selected: #facc15; /* Žlutá pro výběr */
+    --region-targetable: #a7f3d0; /* Světle zelená pro cíl */
+    --border-color-light: #d1d5db;
+
+    --text-light: #374151;
+    --text-muted-light: #6b7280;
+
+    /* Paleta pro hráče */
+    --player-0: #ef4444; /* Červená */
+    --player-1: #3b82f6; /* Modrá */
+    --player-2: #10b981; /* Zelená */
+    --player-3: #f59e0b; /* Oranžová */
+    --player-4: #8b5cf6; /* Fialová */
+    --player-5: #ec4899; /* Růžová */
+}
+
+body.dark {
+    --bg-dark: #1f2937;
+    --fg-dark: #f3f4f6;
+    --card-dark: #374151;
+    --accent-dark: #60a5fa; /* Světlejší modrá */
+    --accent-hover-dark: #3b82f6;
+    --secondary-dark: #4b5563;
+    --secondary-fg-dark: #d1d5db;
+    --region-free: #4b5563; /* Tmavší šedá */
+    --region-hover: #6b7280;
+    --region-selected: #facc15; /* Žlutá zůstává */
+    --region-targetable: #10b981; /* Tmavší zelená */
+    --border-color-dark: #4b5563;
+
+    --text-dark: #e5e7eb;
+    --text-muted-dark: #9ca3af;
+}
+
+/* Sjednocení proměnných pro snadné přepínání */
+:root {
+    --bg: var(--bg-light);
+    --fg: var(--fg-light);
+    --card: var(--card-light);
+    --accent: var(--accent-light);
+    --accent-hover: var(--accent-hover-light);
+    --secondary: var(--secondary-light);
+    --secondary-fg: var(--secondary-fg-light);
+    --border-color: var(--border-color-light);
+    --text-color: var(--text-light);
+    --text-muted: var(--text-muted-light);
 }
 body.dark {
-    --bg: #1f2024;
-    --fg: #f6f7f9;
-    --card: #2a2b30;
+    --bg: var(--bg-dark);
+    --fg: var(--fg-dark);
+    --card: var(--card-dark);
+    --accent: var(--accent-dark);
+    --accent-hover: var(--accent-hover-dark);
+    --secondary: var(--secondary-dark);
+    --secondary-fg: var(--secondary-fg-dark);
+    --border-color: var(--border-color-dark);
+    --text-color: var(--text-dark);
+    --text-muted: var(--text-muted-dark);
 }
-* { box-sizing: border-box; font-family: system-ui, sans-serif; }
+
+* {
+    box-sizing: border-box;
+    font-family: 'Inter', system-ui, sans-serif; /* Použití modernějšího fontu */
+    margin: 0;
+    padding: 0;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 body {
-    margin: 0; display: flex; justify-content: center; align-items: center;
-    background: var(--bg); color: var(--fg); height: 100vh;
+    background: var(--bg);
+    color: var(--text-color);
+    height: 100vh;
+    display: grid;
+    place-items: center;
+    font-size: 16px;
+    line-height: 1.6;
+    transition: background 0.3s ease, color 0.3s ease;
 }
+
+#app {
+    width: 100%;
+    max-width: 1300px; /* Trochu širší pro lepší rozložení */
+    height: 95vh; /* Trochu vyšší */
+    display: flex;
+    gap: 1.5rem; /* Větší mezera */
+    padding: 1rem;
+}
+
+/* --- Základní prvky --- */
+
 .card {
-    background: var(--card); padding: 2rem; border-radius: 1rem; box-shadow: 0 4px 12px rgba(0,0,0,.1); width: 100%; max-width: 500px;
+    background: var(--card);
+    border-radius: 1rem;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.07);
+    padding: 1.5rem;
+    overflow: auto;
+    transition: background 0.3s ease;
+    display: flex; /* Use flex for internal layout */
+    flex-direction: column;
+    gap: 1rem; /* Spacing inside cards */
 }
+
+.input {
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    background-color: var(--bg); /* Background similar to body */
+    color: var(--text-color);
+    font-size: 1rem;
+    width: 100%;
+    margin-bottom: 1rem; /* Spacing below inputs */
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(var(--accent-rgb), 0.2); /* Accent glow on focus */
+}
+/* Placeholder color */
+.input::placeholder {
+    color: var(--text-muted);
+    opacity: 0.7;
+}
+
 button {
-    width: 100%; padding: 0.8rem 1rem; margin-top: 0.5rem; font-size: 1rem;
-    border: none; border-radius: 0.5rem; cursor: pointer; background: var(--accent); color: #fff;
+    cursor: pointer;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.8rem 1.5rem; /* Větší padding */
+    background: var(--accent);
+    color: #fff;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    display: inline-flex; /* Allows alignment */
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
 }
-button.secondary { background: transparent; color: var(--fg); border: 2px solid var(--accent); }
-button[disabled] { opacity: 0.5; cursor: not-allowed; }
-.input { width: 100%; padding: 0.8rem; margin-top: 0.5rem; border: 2px solid var(--accent); border-radius: 0.5rem; background: transparent; color: var(--fg); }
-.list { list-style: none; padding: 0; margin: 0; }
-.list li { padding: 0.25rem 0; display: flex; justify-content: space-between; }
-.timer { font-size: 2rem; text-align: center; margin: 1rem 0; }
-.toggle-theme { position: absolute; top: 1rem; right: 1rem; cursor: pointer; }
+button:hover {
+    background: var(--accent-hover);
+    transform: translateY(-1px); /* Lehký zdvih */
+}
+button:active {
+    transform: translateY(0);
+}
+button:disabled {
+    background-color: var(--secondary);
+    color: var(--secondary-fg);
+    cursor: not-allowed;
+    transform: none;
+}
+
+button.secondary {
+    background: transparent;
+    color: var(--accent);
+    border: 2px solid var(--accent);
+}
+button.secondary:hover {
+    background: rgba(var(--accent-rgb), 0.1); /* Lehký background on hover */
+    color: var(--accent-hover);
+    border-color: var(--accent-hover);
+}
+button.secondary:disabled {
+    background: transparent;
+    color: var(--secondary-fg);
+    border-color: var(--secondary);
+}
+
+h1, h2, h3 {
+    color: var(--fg);
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+h1 { font-size: 1.8rem; }
+h2 { font-size: 1.5rem; }
+h3 { font-size: 1.2rem; }
+
+
+/* --- Panely --- */
+#map-wrapper {
+    flex: 3; /* Větší mapa */
+    position: relative;
+    display: flex; /* Center the SVG */
+    align-items: center;
+    justify-content: center;
+}
+#sidebar {
+    flex: 1.5; /* Trochu širší sidebar */
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+#info-panel, #action-panel, #score-panel {
+    flex: 1; /* Panely v sidebaru se rozdělí rovnoměrně */
+    overflow: hidden; /* Prevent content overflow issues */
+}
+
+/* --- Otázky a Odpovědi --- */
+#question-area {
+    text-align: center;
+    padding: 1.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.75rem;
+    margin-top: 1rem;
+    background-color: rgba(0,0,0,0.02); /* Lehce odlišné pozadí */
+}
+#question-timer {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+}
+#question-text {
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+    min-height: 3em; /* Reserve space */
+}
+#answer-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Dva sloupce */
+    gap: 1rem;
+}
+#answer-options button {
+    width: 100%;
+    padding: 0.8rem; /* Menší padding pro odpovědi */
+    font-size: 0.95rem;
+    background-color: var(--secondary);
+    color: var(--secondary-fg);
+    border: 2px solid var(--secondary);
+}
+#answer-options button:not(:disabled):hover {
+    background-color: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+}
+#answer-options button.correct {
+    background-color: #10b981; /* Zelená pro správnou */
+    color: #fff;
+    border-color: #10b981;
+}
+#answer-options button.incorrect {
+    background-color: #ef4444; /* Červená pro špatnou */
+    color: #fff;
+    border-color: #ef4444;
+}
+
+/* --- SVG Mapa --- */
+svg {
+    width: 100%;
+    height: auto;
+    max-height: 100%; /* Ensure it fits within the wrapper */
+}
+.region {
+    fill: var(--region-free);
+    stroke: #555;
+    stroke-width: 1;
+    transition: fill 0.3s ease, transform 0.1s ease;
+    cursor: pointer;
+}
+.region:hover {
+    fill: var(--region-hover);
+    transform: translateY(-1px);
+}
+.region[data-owner-id] { /* Generic owned style */
+    /* Fill set dynamically */
+}
+.region[data-owner-id].region--selectable {
+    stroke: var(--region-selected);
+    stroke-width: 3;
+    cursor: crosshair;
+}
+.region.region--targetable {
+    stroke: var(--region-targetable);
+    stroke-width: 3;
+    cursor: pointer;
+}
+.region.region--selected-origin {
+    stroke: var(--region-selected); /* Yellow border */
+    stroke-width: 4;
+    stroke-dasharray: 4;
+}
+.region:not([data-owner-id]).region--selectable { /* Selectable free region in draft */
+    stroke: var(--region-selected);
+    stroke-width: 3;
+}
+.region:disabled, .region.disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+.region:disabled:hover, .region.disabled:hover {
+    fill: var(--region-free); /* Don't change fill on hover when disabled */
+    transform: none;
+}
+
+
+/* --- Tabulka skóre --- */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+.table th, .table td {
+    padding: 0.6rem 0.8rem; /* Upravený padding */
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+.table th {
+    font-weight: 600;
+    color: var(--text-muted);
+    background-color: rgba(0,0,0,0.03); /* Lehké pozadí pro hlavičku */
+}
+.table tr:last-child td {
+    border-bottom: none;
+}
+/* Zebra striping - using :nth-child(odd) for better contrast on dark */
+.table tbody tr:nth-child(odd) {
+    background: rgba(0, 0, 0, 0.02);
+}
+.table td.player-name {
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.player-color-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+/* --- Lobby --- */
+#lobby-card {
+    width: 400px;
+    margin: auto; /* Center the lobby card */
+}
+#player-list {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0;
+}
+#player-list li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+#player-list li:last-child {
+    border-bottom: none;
+}
+.ready-status {
+    font-weight: bold;
+    color: #10b981; /* Zelená pro ready */
+}
+
+/* --- Home --- */
+#home-card {
+    width: 400px;
+    text-align: center;
+    margin: auto; /* Center the home card */
+}
+#home-card h1 {
+    margin-bottom: 1.5rem;
+}
+#home-card button {
+    width: 100%;
+    margin-top: 0.5rem;
+}
+#home-card input#code {
+    margin-top: 1.5rem; /* Větší mezera před kódem */
+}
+
+/* --- Utility --- */
+.text-center { text-align: center; }
+.hidden { display: none !important; }
+.turn-indicator { font-weight: bold; }
+
+/* --- Přidání proměnných pro accent barvu v RGB pro použití v rgba() --- */
+:root { --accent-rgb: 37, 99, 235; }
+body.dark { --accent-rgb: 96, 165, 250; }
+
+/* --- MODAL STYLES --- */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.6); /* Black w/ opacity */
+    /* Use flexbox to center the modal content */
+    align-items: center;
+    justify-content: center;
+    padding: 1rem; /* Padding around the content */
+}
+
+.modal-content {
+    background-color: var(--card);
+    color: var(--text-color);
+    margin: auto;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    max-width: 600px; /* Max width of modal */
+    width: 90%; /* Responsive width */
+    text-align: center;
+}
+
+/* Styles specific to elements inside the modal */
+#modal-question-area h2 {
+    margin-bottom: 1rem;
+    color: var(--fg); /* Match heading color */
+}
+
+#modal-question-timer {
+    font-size: 1.8rem; /* Larger timer */
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 1rem;
+    min-height: 1.2em;
+}
+
+#modal-question-text {
+    font-size: 1.2rem; /* Larger question text */
+    margin-bottom: 2rem;
+    min-height: 3em;
+    line-height: 1.5;
+}
+
+#modal-answer-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two columns */
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+#modal-answer-options button {
+    width: 100%;
+    padding: 1rem; /* Larger buttons */
+    font-size: 1rem;
+    background-color: var(--secondary);
+    color: var(--secondary-fg);
+    border: 2px solid var(--secondary);
+    border-radius: 0.5rem; /* Match other buttons */
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+#modal-answer-options button:not(:disabled):hover {
+    background-color: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+}
+
+#modal-answer-options button.correct {
+    background-color: #10b981; /* Green for correct */
+    color: #fff;
+    border-color: #10b981;
+}
+
+#modal-answer-options button.incorrect {
+    background-color: #ef4444; /* Red for incorrect */
+    color: #fff;
+    border-color: #ef4444;
+}
+
+#modal-answer-options button:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+#modal-question-feedback {
+    margin-top: 1rem;
+    min-height: 1.5em; /* Reserve space */
+    font-weight: bold;
+    font-size: 1.1rem;
+}
