@@ -87,7 +87,7 @@ function sanitizeQuestionForSpectator(q) {
 io.on("connection", (socket) => {
     console.log(`Socket connected: ${socket.id}`);
 
-    socket.on("create", ({ name }, callback) => {
+    socket.on("create", ({ name, category, difficulty }, callback) => {
         // Input validation
         if (typeof name !== 'string' || name.trim().length === 0 || name.length > 20) {
             return callback({ error: "Neplatné jméno (max 20 znaků)." });
@@ -107,6 +107,8 @@ io.on("connection", (socket) => {
                 id: roomId,
                 players: [hostPlayer],
                 hostId: socket.id,
+                category: typeof category === 'string' && category !== '' ? category : null,
+                difficulty: typeof difficulty === 'string' && difficulty !== '' ? difficulty : null,
                 phase: "lobby", // Initial phase
                 turnCounter: 0,
                 deck: [], // Will be filled on game start
@@ -126,7 +128,7 @@ io.on("connection", (socket) => {
             socket.join(roomId);
             console.log(`[${roomId}] Room created by ${hostPlayer.name} (${socket.id})`);
             // Send back the necessary info
-            callback({ roomId, players: rooms[roomId].players });
+            callback({ roomId, players: rooms[roomId].players, category: rooms[roomId].category, difficulty: rooms[roomId].difficulty });
         } catch (error) {
             console.error("Error creating room:", error);
             callback({ error: "Nepodařilo se vytvořit místnost. Zkuste to prosím znovu." });
@@ -160,7 +162,7 @@ io.on("connection", (socket) => {
             socket.join(roomId); // Ensure they are in the socket.io room
             // Send full state in case they missed updates
             socket.emit("state", serializeRoomState(room));
-            return callback({ roomId, players: room.players });
+            return callback({ roomId, players: room.players, category: room.category, difficulty: room.difficulty });
         }
 
         if (potentialReconnectPlayer && room.phase !== 'lobby' && room.phase !== 'finished') {
@@ -175,7 +177,7 @@ io.on("connection", (socket) => {
             // Send the full current game state to the reconnected player
             socket.emit("state", serializeRoomState(room));
             console.log(`[${roomId}] Reconnection successful for ${trimmedName}. Old ID: ${oldSocketId}, New ID: ${socket.id}`);
-            return callback({ roomId, players: room.players }); // Confirm join/reconnect
+            return callback({ roomId, players: room.players, category: room.category, difficulty: room.difficulty }); // Confirm join/reconnect
         }
         // --- End Reconnection Logic ---
 
@@ -206,7 +208,7 @@ io.on("connection", (socket) => {
             console.log(`[${roomId}] ${newPlayer.name} (${socket.id}) joined room.`);
             // Emit updated player list to everyone in the room
             io.to(roomId).emit("players", room.players);
-            callback({ roomId, players: room.players }); // Confirm join
+            callback({ roomId, players: room.players, category: room.category, difficulty: room.difficulty }); // Confirm join
         } catch (error) {
             console.error(`[${roomId}] Error adding player ${trimmedName}:`, error);
             callback({ error: "Nepodařilo se připojit k místnosti." });
@@ -478,7 +480,19 @@ function initializeGame(roomId) {
 
     console.log(`[${roomId}] Initializing game state...`);
     room.phase = "initializing";
-    room.deck = shuffle([...questions]); // Create a shuffled deck for this game
+    let deckSource = questions.filter(q => {
+        const catOk = !room.category || room.category === 'any' || q.category === room.category;
+        const diffOk = !room.difficulty || room.difficulty === 'any' || q.difficulty === room.difficulty;
+        return catOk && diffOk;
+    });
+    if (deckSource.length === 0) {
+        console.warn(`[${roomId}] No questions match selected filters. Using all questions.`);
+        deckSource = questions;
+    }
+    if (deckSource.length < room.players.length + MAX_TURNS) {
+        console.warn(`[${roomId}] Warning: Not enough filtered questions for full game (${deckSource.length}).`);
+    }
+    room.deck = shuffle([...deckSource]);
     room.turnCounter = 0;
     room.currentQuestion = null;
     room.answers = {};
@@ -1511,6 +1525,8 @@ function serializeRoomState(room) {
         activePlayerId: room.activePlayerId,
         turnIndex: room.turnIndex, // Client uses this for turn order display logic maybe
         lastResult: room.lastResult || null,
+        category: room.category || null,
+        difficulty: room.difficulty || null,
 
         // Player Data (Public Info)
         players: players.map(p => ({

@@ -5,6 +5,8 @@ const app = $("#app");
 const modal = $("#question-modal");
 
 const PLAYER_COLORS = ["#ef4444", "#3b82f6", "#10b981", "#f59e0b", "#8b5cf6", "#ec4899"];
+const CATEGORIES = ["General"];
+const DIFFICULTIES = ["easy", "medium", "hard"];
 
 // --- MAP LOADING ---
 // Declare the promise variable globally
@@ -40,6 +42,8 @@ let state = {
     territories: [], phase: "lobby", turnIndex: 0, myTurn: false, activePlayerId: null,
     question: null, prepTime: 0, lastResult: null, turnCounter: 0, turnData: null,
     lastRevealedQuestion: null,
+    category: null,
+    difficulty: null,
 };
 
 let questionTimerInterval = null;
@@ -61,18 +65,39 @@ function render() {
 }
 
 function renderHome() {
+    const categoryOptions = CATEGORIES.map(c => `<option value="${c}">${c}</option>`).join('');
+    const difficultyOptions = DIFFICULTIES.map(d => `<option value="${d}">${d}</option>`).join('');
     app.innerHTML = `
         <div id="home-card" class="card">
             <h1>Dobyvatel ČR</h1>
             <input id="name" class="input" placeholder="Tvé jméno" value="${state.myName || ''}" />
+            <label>Kategorie:
+                <select id="category">
+                    <option value="">Vše</option>
+                    ${categoryOptions}
+                </select>
+            </label>
+            <label>Obtížnost:
+                <select id="difficulty">
+                    <option value="">Vše</option>
+                    ${difficultyOptions}
+                </select>
+            </label>
             <button id="create">Vytvořit hru</button>
             <input id="code" class="input" placeholder="Kód místnosti (6 znaků)" />
             <button id="join" class="secondary">Připojit se ke hře</button>
             <p id="home-error" style="color: red; margin-top: 1rem; min-height: 1.2em;"></p>
         </div>`;
     $("#create").onclick = () => {
-        const name = $("#name").value.trim(); if (!name) { $("#home-error").textContent = "Zadejte prosím jméno."; return; }
-        $("#home-error").textContent = ""; state.myName = name; socket.emit("create", { name }, handleRoomResponse);
+        const name = $("#name").value.trim();
+        if (!name) { $("#home-error").textContent = "Zadejte prosím jméno."; return; }
+        const category = $("#category").value;
+        const difficulty = $("#difficulty").value;
+        $("#home-error").textContent = "";
+        state.myName = name;
+        state.category = category || null;
+        state.difficulty = difficulty || null;
+        socket.emit("create", { name, category, difficulty }, handleRoomResponse);
     };
     $("#join").onclick = () => {
         const name = $("#name").value.trim(); const code = $("#code").value.trim().toUpperCase(); if (!name || !code || code.length !== 6) { $("#home-error").textContent = "Zadejte jméno a platný 6místný kód."; return; }
@@ -86,7 +111,12 @@ function handleRoomResponse(res) {
         const errorEl = $("#home-error"); if(errorEl) errorEl.textContent = "Chyba: " + res.error;
     } else {
         console.log("Room created/joined successfully:", res);
-        state.roomId = res.roomId; state.myId = socket.id; state.players = res.players; state.view = "lobby";
+        state.roomId = res.roomId;
+        state.myId = socket.id;
+        state.players = res.players;
+        state.category = res.category || null;
+        state.difficulty = res.difficulty || null;
+        state.view = "lobby";
         render();
     }
 }
@@ -97,6 +127,7 @@ function renderLobby() {
         <div id="lobby-card" class="card">
             <h2>Místnost: ${state.roomId}</h2>
             <p>Sdílej kód s přáteli. Hra je pro ${minPlayers}-6 hráčů.</p>
+            <p>Vybraná kategorie: ${state.category || 'vše'}, obtížnost: ${state.difficulty || 'vše'}</p>
             <h3>Hráči:</h3>
             <ul id="player-list"></ul>
             <button id="ready">Jsem připraven</button>
@@ -758,7 +789,7 @@ socket.on("connect", () => {
                 console.error("Rejoin failed:", res.error);
                 alert("Připojení k místnosti selhalo: " + res.error + "\nBudete vráceni na hlavní obrazovku.");
                 // Reset state completely and go home
-                state = { view: "home", myId: socket.id, myName: state.myName, roomId: "", players: [], territories: [], phase: 'lobby', turnIndex: 0, myTurn: false, activePlayerId: null, question: null, prepTime: 0, lastResult: null, turnCounter: 0, turnData: null, initialPlayerOrder: [], lastRevealedQuestion: null };
+                state = { view: "home", myId: socket.id, myName: state.myName, roomId: "", players: [], territories: [], phase: 'lobby', turnIndex: 0, myTurn: false, activePlayerId: null, question: null, prepTime: 0, lastResult: null, turnCounter: 0, turnData: null, initialPlayerOrder: [], lastRevealedQuestion: null, category: null, difficulty: null };
                 render();
             } else {
                 console.log("Rejoined successfully. Waiting for state update.");
