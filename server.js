@@ -1579,4 +1579,10 @@ if (require.main === module) {
     });
 }
 
-module.exports.areAdjacent = areAdjacent;
+module.exports = {
+    areAdjacent,
+    evaluateDraftOrder,
+    advanceTurn,
+    checkForVictory,
+    rooms
+};
