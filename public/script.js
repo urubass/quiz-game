@@ -4,6 +4,23 @@ const $$ = sel => document.querySelectorAll(sel);
 const app = $("#app");
 const modal = $("#question-modal");
 
+// --- TEXT-TO-SPEECH SETUP ---
+let ttsEnabled = true;
+let ttsVoice = null;
+
+function initTTS() {
+    if (!('speechSynthesis' in window)) return;
+    const chooseVoice = () => {
+        const voices = speechSynthesis.getVoices();
+        if (!voices.length) return;
+        ttsVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith('cs')) || voices[0] || null;
+    };
+    chooseVoice();
+    speechSynthesis.onvoiceschanged = chooseVoice;
+}
+
+initTTS();
+
 const PLAYER_COLORS = ["#ef4444", "#3b82f6", "#10b981", "#f59e0b", "#8b5cf6", "#ec4899"];
 const TEAMS = ["red", "blue"];
 const TEAM_NAMES = { red: "Červení", blue: "Modří" };
@@ -90,6 +107,23 @@ function createLeaveButton() {
     return btn;
 }
 
+function createTtsToggleButton() {
+    const btn = document.createElement('button');
+    btn.id = 'tts-toggle';
+    btn.classList.add('secondary');
+    const updateLabel = () => {
+        btn.textContent = ttsEnabled ? '🔊' : '🔇';
+        btn.title = ttsEnabled ? 'Vypnout čtení otázek' : 'Zapnout čtení otázek';
+    };
+    updateLabel();
+    btn.onclick = () => {
+        ttsEnabled = !ttsEnabled;
+        if (!ttsEnabled) speechSynthesis.cancel();
+        updateLabel();
+    };
+    return btn;
+}
+
 let questionTimerInterval = null;
 let prepTimerInterval = null;
 const MIN_PLAYERS_CLIENT = 2; // Sync with server MIN_PLAYERS if changed
@@ -121,6 +155,8 @@ function renderHome() {
             <button id="join" class="secondary">Připojit se ke hře</button>
             <p id="home-error" style="color: red; margin-top: 1rem; min-height: 1.2em;"></p>
         </div>`;
+    const homeCard = $("#home-card");
+    if (homeCard) homeCard.appendChild(createTtsToggleButton());
     $("#create").onclick = () => {
         const name = $("#name").value.trim();
         if (!name) {
@@ -165,7 +201,10 @@ function renderLobby() {
             <p id="lobby-info" style="margin-top: 1rem; min-height: 1.2em;"></p>
         </div>`;
     const card = $("#lobby-card");
-    if (card) card.appendChild(createLeaveButton());
+    if (card) {
+        card.appendChild(createLeaveButton());
+        card.appendChild(createTtsToggleButton());
+    }
     updatePlayerList();
     setupLobbyButtons();
 }
@@ -263,7 +302,10 @@ async function renderGame() {
         `;
 
     const sidebar = $("#sidebar");
-    if (sidebar) sidebar.appendChild(createLeaveButton());
+    if (sidebar) {
+        sidebar.appendChild(createLeaveButton());
+        sidebar.appendChild(createTtsToggleButton());
+    }
 
     // Use requestAnimationFrame to ensure the DOM is updated before trying to manipulate it
     requestAnimationFrame(() => {
@@ -1001,6 +1043,13 @@ socket.on("question", ({ q, limit, type }) => {
     console.log(`%c QUESTION | Type=${type}, L=${limit}, Txt=${q?.text?.substring(0, 30)}... CurrentPhase=${state.phase}`, 'color: #00aa00');
     state.question = { ...q, limit, type }; // Store the new question details
     state.prepTime = 0; // Prep time is over
+
+    if (ttsEnabled && q?.text && 'speechSynthesis' in window) {
+        const utter = new SpeechSynthesisUtterance(q.text);
+        if (ttsVoice) utter.voice = ttsVoice;
+        speechSynthesis.cancel();
+        speechSynthesis.speak(utter);
+    }
 
     // Determine the expected phase based on the question type
     let expectedPhase = 'unknown-question';
