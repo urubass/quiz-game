@@ -13,6 +13,9 @@ const io = new Server(server, {
     pingInterval: 25000 // Default 25000
 });
 const PORT = process.env.PORT || 3000;
+const pkg = require("./package.json");
+const ENABLE_BOTS_GLOBAL = process.env.ENABLE_BOTS ? process.env.ENABLE_BOTS === "true" : (pkg.config && pkg.config.enableBots);
+const Bot = require("./src/bot");
 
 /* === CONSTANTS ========================================================= */
 const PREP_TIME = 3; // Increased slightly
@@ -82,12 +85,23 @@ function sanitizeQuestion(q) {
 function sanitizeQuestionForSpectator(q) {
     return sanitizeQuestion(q); // Currently same as normal sanitize
 }
+function spawnBots(roomId, count) {
+    const room = rooms[roomId];
+    if (!room) return;
+    room.bots = room.bots || [];
+    for (let i = 0; i < count; i++) {
+        const bot = new Bot(`Bot_${i+1}`, `http://localhost:${PORT}`);
+        room.bots.push(bot);
+        bot.joinRoom(roomId);
+    }
+}
+
 
 /* === SOCKET LOGIC ====================================================== */
 io.on("connection", (socket) => {
     console.log(`Socket connected: ${socket.id}`);
 
-    socket.on("create", ({ name }, callback) => {
+    socket.on("create", ({ name, playerCount }, callback) => {
         // Input validation
         if (typeof name !== 'string' || name.trim().length === 0 || name.length > 20) {
             return callback({ error: "Neplatné jméno (max 20 znaků)." });
@@ -127,6 +141,10 @@ io.on("connection", (socket) => {
             console.log(`[${roomId}] Room created by ${hostPlayer.name} (${socket.id})`);
             // Send back the necessary info
             callback({ roomId, players: rooms[roomId].players });
+            if (ENABLE_BOTS_GLOBAL && Number.isInteger(playerCount) && playerCount > 1) {
+                const botsNeeded = Math.min(MAX_PLAYERS, playerCount) - 1;
+                spawnBots(roomId, botsNeeded);
+            }
         } catch (error) {
             console.error("Error creating room:", error);
             callback({ error: "Nepodařilo se vytvořit místnost. Zkuste to prosím znovu." });
@@ -1449,6 +1467,10 @@ function endGame(roomId, reason) {
     room.activePlayerId = null; // No active player
     room.currentQuestion = null; // No active question
     room.lastResult = reason; // Store the reason for game end
+    if (Array.isArray(room.bots)) {
+        room.bots.forEach(b => b.socket.disconnect());
+        room.bots = [];
+    }
 
     // Sort players for final ranking based on score, then territory count
     room.players.sort((a, b) => {

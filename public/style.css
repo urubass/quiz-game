@@ -393,6 +393,9 @@ svg {
     width: 100%;
     margin-top: 0.5rem;
 }
+#home-card input#players {
+    margin-top: 0.5rem;
+}
 #home-card input#code {
     margin-top: 1.5rem; /* Větší mezera před kódem */
 }
