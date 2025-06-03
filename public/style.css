@@ -513,3 +513,28 @@ body.dark { --accent-rgb: 96, 165, 250; }
     font-weight: bold;
     font-size: 1.1rem;
 }
+
+/* --- Reveal results --- */
+.player-result-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 1rem;
+}
+.player-result-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0;
+}
+.result-icon.correct { color: #10b981; }
+.result-icon.incorrect { color: #ef4444; }
+.result-icon.timeout { color: var(--text-muted); }
+.answer-time {
+    margin-left: auto;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+.player-result-item.fastest .answer-time {
+    color: var(--accent);
+    font-weight: bold;
+}
