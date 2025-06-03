@@ -1,4 +1,4 @@
-const { areAdjacent } = require('../server');
+const { areAdjacent } = require('../src/utils');
 
 describe('areAdjacent', () => {
   test('reports adjacency for neighboring regions', () => {
