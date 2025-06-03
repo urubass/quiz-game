@@ -1008,6 +1008,11 @@ function handleSelectAction(socket, roomId, fromTerritoryId, targetTerritoryId) 
     if (fromTerritory.owner !== player.id) return socket.emit("errorMsg", "Nelze provést akci z území, které nevlastníš.");
     if (targetTerritory.owner === player.id) return socket.emit("errorMsg", "Nelze útočit na vlastní území nebo ho znovu obsazovat.");
     if (!areAdjacent(fromTerritoryId, targetTerritoryId)) return socket.emit("errorMsg", "Území spolu nesousedí.");
+
+    const ownerPlayer = getPlayer(room, targetTerritory.owner);
+    if (ownerPlayer && ownerPlayer.team === player.team) {
+        return socket.emit("errorMsg", "Nelze útočit na území vlastněné spoluhráčem.");
+    }
     // --- End Validations ---
 
     clearRoomTimers(room); // Clear any lingering timers
