@@ -22,6 +22,8 @@
     --player-3: #f59e0b; /* Oranžová */
     --player-4: #8b5cf6; /* Fialová */
     --player-5: #ec4899; /* Růžová */
+    --team-red: var(--player-0);
+    --team-blue: var(--player-1);
 }
 
 body.dark {
@@ -339,6 +341,13 @@ svg {
     height: 10px;
     border-radius: 50%;
     display: inline-block;
+}
+.team-color-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 0.3rem;
 }
 
 /* --- Turn Order Indicator --- */

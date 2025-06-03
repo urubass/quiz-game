@@ -38,15 +38,16 @@ describe('serializeRoomState', () => {
       phase: 'attack',
       turnCounter: 2,
       activePlayerId: 'a1',
+      activeTeam: null,
       turnIndex: 0,
       lastResult: 'some result',
       players: [
-        { id: 'a1', name: 'Alice', score: 3, territories: ['PHA'] },
-        { id: 'b2', name: 'Bob', score: 0, territories: [] }
+        { id: 'a1', name: 'Alice', score: 3, team: undefined, territories: ['PHA'] },
+        { id: 'b2', name: 'Bob', score: 0, team: undefined, territories: [] }
       ],
       initialPlayerOrder: [
-        { id: 'a1', name: 'Alice', initialOrder: 0 },
-        { id: 'b2', name: 'Bob', initialOrder: 1 }
+        { id: 'a1', name: 'Alice', initialOrder: 0, team: undefined },
+        { id: 'b2', name: 'Bob', initialOrder: 1, team: undefined }
       ],
       territories: [
         { id: 'PHA', owner: 'a1' },
@@ -83,6 +84,7 @@ describe('serializeRoomState', () => {
       phase: 'prep',
       turnCounter: 0,
       activePlayerId: null,
+      activeTeam: null,
       turnIndex: 0,
       lastResult: null,
       players: [],

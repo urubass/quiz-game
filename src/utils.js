@@ -26,19 +26,21 @@ function serializeRoomState(room) {
   const players = Array.isArray(room.players) ? room.players : [];
   const territories = Array.isArray(room.territories) ? room.territories : [];
   const initialPlayerOrderSummary = Array.isArray(room.initialPlayerOrder)
-    ? room.initialPlayerOrder.map(p => ({ id: p.id, name: p.name, initialOrder: p.initialOrder }))
+    ? room.initialPlayerOrder.map(p => ({ id: p.id, name: p.name, initialOrder: p.initialOrder, team: p.team }))
     : [];
   return {
     roomId: room.id,
     phase: room.phase,
     turnCounter: room.turnCounter,
     activePlayerId: room.activePlayerId,
+    activeTeam: room.activeTeam || null,
     turnIndex: room.turnIndex,
     lastResult: room.lastResult || null,
     players: players.map(p => ({
       id: p.id,
       name: p.name,
       score: p.score || 0,
+      team: p.team,
       territories: Array.isArray(p.territories) ? p.territories : []
     })),
     initialPlayerOrder: initialPlayerOrderSummary,
