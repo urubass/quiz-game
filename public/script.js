@@ -8,6 +8,7 @@ const PLAYER_COLORS = ["#ef4444", "#3b82f6", "#10b981", "#f59e0b", "#8b5cf6", "#
 const TEAMS = ["red", "blue"];
 const TEAM_NAMES = { red: "Červení", blue: "Modří" };
 const TEAM_COLORS = { red: "#ef4444", blue: "#3b82f6" };
+const ALL_CATEGORIES = ["general", "history", "sport", "geography", "science", "culture"];
 
 // --- MAP LOADING ---
 // Declare the promise variable globally
@@ -64,23 +65,30 @@ function render() {
 }
 
 function renderHome() {
+    const categoryOptions = ALL_CATEGORIES.map(c => `<option value="${c}">${c}</option>`).join('');
     app.innerHTML = `
         <div id="home-card" class="card">
             <h1>Dobyvatel ČR</h1>
             <input id="name" class="input" placeholder="Tvé jméno" value="${state.myName || ''}" />
             <input id="bots" class="input" type="number" min="0" max="5" value="0" placeholder="Počet botů" />
-            <input id="categories" class="input" placeholder="Kategorie (oddělené čárkou)" />
+            <select id="categories" class="input" multiple>${categoryOptions}</select>
             <button id="create">Vytvořit hru</button>
             <input id="code" class="input" placeholder="Kód místnosti (6 znaků)" />
             <button id="join" class="secondary">Připojit se ke hře</button>
             <p id="home-error" style="color: red; margin-top: 1rem; min-height: 1.2em;"></p>
         </div>`;
     $("#create").onclick = () => {
-        const name = $("#name").value.trim(); if (!name) { $("#home-error").textContent = "Zadejte prosím jméno."; return; }
+        const name = $("#name").value.trim();
+        if (!name) {
+            $("#home-error").textContent = "Zadejte prosím jméno.";
+            return;
+        }
         const bots = parseInt($("#bots").value, 10) || 0;
-        const categoriesInput = $("#categories").value.trim();
-        const categories = categoriesInput ? categoriesInput.split(',').map(c => c.trim()).filter(c => c) : [];
-        $("#home-error").textContent = ""; state.myName = name; socket.emit("create", { name, bots, categories }, handleRoomResponse);
+        const categoriesSelect = $("#categories");
+        const categories = Array.from(categoriesSelect.selectedOptions).map(o => o.value);
+        $("#home-error").textContent = "";
+        state.myName = name;
+        socket.emit("create", { name, bots, categories }, handleRoomResponse);
     };
     $("#join").onclick = () => {
         const name = $("#name").value.trim(); const code = $("#code").value.trim().toUpperCase(); if (!name || !code || code.length !== 6) { $("#home-error").textContent = "Zadejte jméno a platný 6místný kód."; return; }
