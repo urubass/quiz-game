@@ -108,7 +108,8 @@ function getNextPlayerForTeam(room, team) {
     let checked = 0;
     while (checked < list.length) {
         const pid = list[idx];
-        if (getPlayer(room, pid)) {
+        const p = getPlayer(room, pid);
+        if (p && !p.spectator) {
             room.teamPlayerIndices[team] = (idx + 1) % list.length;
             return pid;
         }
@@ -185,7 +186,8 @@ io.on("connection", (socket) => {
                 ready: false, // Host isn't ready by default
                 territories: [],
                 initialOrder: 0, // Host is initially first in list
-                team: TEAMS[0]
+                team: TEAMS[0],
+                spectator: false
             };
             rooms[roomId] = {
                 id: roomId,
@@ -298,7 +300,8 @@ io.on("connection", (socket) => {
                 ready: false,
                 territories: [],
                 initialOrder: room.players.length, // Order based on join sequence initially
-                team: assignTeam(room)
+                team: assignTeam(room),
+                spectator: false
             };
             room.players.push(newPlayer);
             socket.join(roomId);
@@ -403,8 +406,9 @@ function handleDisconnect(socket, reason) {
             const disconnectedPlayer = room.players[playerIndex];
             console.log(`[${rId}] Player ${disconnectedPlayer.name} (${disconnectedPlayerId}) disconnected/left.`);
 
-            // --- Immediate Player Removal ---
-            room.players.splice(playerIndex, 1);
+            // --- Mark as Spectator Instead of Removing ---
+            disconnectedPlayer.spectator = true;
+            disconnectedPlayer.score = 0;
 
             // --- Remove from Initial Order & Adjust Turn Index ---
             let turnIndexAdjusted = false;
@@ -440,9 +444,10 @@ function handleDisconnect(socket, reason) {
                 });
                 if (releasedCount > 0) console.log(`[${rId}] Released ${releasedCount} territories owned by ${disconnectedPlayer.name}.`);
 
-                // Check if Game Ends due to Insufficient Players
-                if (room.players.length < MIN_PLAYERS) {
-                    console.log(`[${rId}] Not enough players left (${room.players.length}), ending game.`);
+                // Check if Game Ends due to Insufficient Active Players
+                const activeCount = room.players.filter(p => !p.spectator).length;
+                if (activeCount < MIN_PLAYERS) {
+                    console.log(`[${rId}] Not enough players left (${activeCount}), ending game.`);
                     endGame(rId, `Nedostatek hráčů (${disconnectedPlayer.name} opustil hru).`);
                     // endGame handles cleanup and state emission, so break early
                     break;
@@ -539,15 +544,19 @@ function handleDisconnect(socket, reason) {
 
             // Assign New Host if Host Disconnected
             if (room.hostId === disconnectedPlayerId && room.players.length > 0) {
-                room.hostId = room.players[0].id; // Assign to the next player in the list
-                console.log(`[${rId}] Host disconnected. New host assigned: ${room.players[0].name} (${room.hostId})`);
-                // Notify players about the new host (client updates based on first player in list)
-                if (room.phase === 'lobby') { io.to(rId).emit("players", room.players); }
-                else if (room.phase !== 'finished') { io.to(rId).emit("state", serializeRoomState(room)); }
+                const newHost = room.players.find(p => p.id !== disconnectedPlayerId && !p.spectator);
+                if (newHost) {
+                    room.hostId = newHost.id;
+                    console.log(`[${rId}] Host disconnected. New host assigned: ${newHost.name} (${room.hostId})`);
+                    // Notify players about the new host (client updates based on first player in list)
+                    if (room.phase === 'lobby') { io.to(rId).emit("players", room.players); }
+                    else if (room.phase !== 'finished') { io.to(rId).emit("state", serializeRoomState(room)); }
+                }
             }
 
-            // Clean Up Room if Empty
-            if (room.players.length === 0) {
+            // Clean Up Room if No Active Players Remain
+            const remainingActive = room.players.filter(p => !p.spectator).length;
+            if (remainingActive === 0) {
                 console.log(`[${rId}] Room is now empty. Deleting room.`);
                 clearRoomTimers(room); // Clear any remaining timers
                 delete rooms[rId];
@@ -899,8 +908,8 @@ function setNextDraftPicker(roomId) {
         const nextPlayer = getPlayer(room, nextPlayerId); // Find the player object
 
         // Handle case where the next player might have disconnected during the draft
-        if (!nextPlayer) {
-            console.warn(`[${roomId}] Player ranked ${room.draftData.index + 1} (ID: ${nextPlayerId}) not found (disconnected?). Skipping.`);
+        if (!nextPlayer || nextPlayer.spectator) {
+            console.warn(`[${roomId}] Player ranked ${room.draftData.index + 1} (ID: ${nextPlayerId}) not available. Skipping.`);
             // Recursively call to move to the *next* available player
             setNextDraftPicker(roomId);
             return; // Stop execution for this recursion level
