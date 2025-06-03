@@ -6,29 +6,34 @@ const { Server } = require('socket.io');
 const registerSocketHandlers = require('./src/socketHandlers');
 const { areAdjacent } = require('./src/utils');
 
-const app = express();
-const server = http.createServer(app);
-const io = new Server(server, {
-  cors: { origin: '*' },
-  pingTimeout: 10000,
-  pingInterval: 25000
-});
+function createServer() {
+  const app = express();
+  const server = http.createServer(app);
+  const io = new Server(server, {
+    cors: { origin: '*' },
+    pingTimeout: 10000,
+    pingInterval: 25000
+  });
 
-registerSocketHandlers(io);
+  registerSocketHandlers(io);
+
+  app.use(express.static(path.join(__dirname, 'public')));
+
+  app.get('*', (req, res) => {
+    if (req.url.includes('.') && !req.url.endsWith('.html')) {
+      res.status(404).end();
+    } else {
+      res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    }
+  });
+
+  return { app, server, io };
+}
 
 const PORT = process.env.PORT || 3000;
 
-app.use(express.static(path.join(__dirname, 'public')));
-
-app.get('*', (req, res) => {
-  if (req.url.includes('.') && !req.url.endsWith('.html')) {
-    res.status(404).end();
-  } else {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
-  }
-});
-
 if (require.main === module) {
+  const { server, io } = createServer();
   server.listen(PORT, () =>
     console.log(`Dobyvatel server running on http://localhost:${PORT}`)
   );
@@ -45,4 +50,4 @@ if (require.main === module) {
   });
 }
 
-module.exports.areAdjacent = areAdjacent;
+module.exports = { createServer, areAdjacent };
