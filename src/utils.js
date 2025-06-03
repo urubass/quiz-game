@@ -3,16 +3,16 @@ const ADJACENCY = {
   "PHA": ["STC"],
   "STC": ["PHA", "JHC", "PLK", "KVK", "ULK", "LBK", "HKK", "PAK", "VYS"],
   "JHC": ["STC", "PLK", "VYS", "JHM"],
-  "PLK": ["STC", "JHC", "KVK", "ULK"],
+  "PLK": ["STC", "JHC", "KVK"],
   "KVK": ["STC", "PLK", "ULK"],
-  "ULK": ["STC", "PLK", "KVK", "LBK"],
+  "ULK": ["STC", "KVK", "LBK"],
   "LBK": ["STC", "ULK", "HKK"],
-  "HKK": ["STC", "LBK", "PAK", "OLK"],
+  "HKK": ["STC", "LBK", "PAK"],
   "PAK": ["STC", "HKK", "OLK", "VYS", "JHM"],
-  "VYS": ["STC", "JHC", "PAK", "JHM", "ZLK", "OLK"],
-  "JHM": ["JHC", "PAK", "VYS", "ZLK"],
-  "ZLK": ["VYS", "JHM", "OLK", "MSK"],
-  "OLK": ["HKK", "PAK", "VYS", "ZLK", "MSK"],
+  "VYS": ["STC", "JHC", "PAK", "JHM", "OLK"],
+  "JHM": ["JHC", "VYS", "PAK", "OLK", "ZLK"],
+  "ZLK": ["JHM", "OLK", "MSK"],
+  "OLK": ["PAK", "VYS", "JHM", "ZLK", "MSK"],
   "MSK": ["OLK", "ZLK"]
 };
 
