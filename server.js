@@ -24,6 +24,7 @@ const DRAFT_WINNER_PICKS = 2;
 const DRAFT_OTHERS_PICKS = 1;
 const MAX_TURNS = 50;
 const FIRST_PICK_BONUS = 100; // Bonus score for first territory claimed in draft
+const TIME_ATTACK_LIMIT = 300; // seconds for timeAttack mode
 
 // Region IDs
 const REGIONS = ["PHA", "STC", "JHC", "PLK", "KVK", "ULK", "LBK", "HKK", "PAK", "OLK", "MSK", "JHM", "ZLK", "VYS"];
@@ -72,6 +73,20 @@ function getPlayer(room, playerId) {
     return room.players.find(p => p.id === playerId);
 }
 
+function getTeam(room, teamId) {
+    if (!room || !Array.isArray(room.teams)) return null;
+    return room.teams.find(t => t.id === teamId);
+}
+
+function addScore(room, player, points) {
+    if (!player || !room) return;
+    player.score = (player.score || 0) + points;
+    if (room.mode === 'team' && player.team) {
+        const team = getTeam(room, player.team);
+        if (team) team.score = (team.score || 0) + points;
+    }
+}
+
 // Helper to remove the 'correct' answer before sending to clients
 function sanitizeQuestion(q) {
     if (!q) return null;
@@ -87,13 +102,14 @@ function sanitizeQuestionForSpectator(q) {
 io.on("connection", (socket) => {
     console.log(`Socket connected: ${socket.id}`);
 
-    socket.on("create", ({ name }, callback) => {
+    socket.on("create", ({ name, mode }, callback) => {
         // Input validation
         if (typeof name !== 'string' || name.trim().length === 0 || name.length > 20) {
             return callback({ error: "Neplatné jméno (max 20 znaků)." });
         }
 
         try {
+            const gameMode = ["standard", "team", "timeAttack"].includes(mode) ? mode : "standard";
             const roomId = generateRoomId();
             const hostPlayer = {
                 id: socket.id,
@@ -105,6 +121,7 @@ io.on("connection", (socket) => {
             };
             rooms[roomId] = {
                 id: roomId,
+                mode: gameMode,
                 players: [hostPlayer],
                 hostId: socket.id,
                 phase: "lobby", // Initial phase
@@ -121,12 +138,15 @@ io.on("connection", (socket) => {
                 prepTimer: null, // Timeout IDs for clearing
                 questionTimer: null,
                 revealTimer: null,
-                initialPlayerOrder: [] // Array of { id, name, initialOrder } - set on game start
+                initialPlayerOrder: [], // Array of { id, name, initialOrder } - set on game start
+                teams: [],
+                timeRemaining: null,
+                globalTimer: null
             };
             socket.join(roomId);
             console.log(`[${roomId}] Room created by ${hostPlayer.name} (${socket.id})`);
             // Send back the necessary info
-            callback({ roomId, players: rooms[roomId].players });
+            callback({ roomId, players: rooms[roomId].players, mode: gameMode });
         } catch (error) {
             console.error("Error creating room:", error);
             callback({ error: "Nepodařilo se vytvořit místnost. Zkuste to prosím znovu." });
@@ -160,7 +180,7 @@ io.on("connection", (socket) => {
             socket.join(roomId); // Ensure they are in the socket.io room
             // Send full state in case they missed updates
             socket.emit("state", serializeRoomState(room));
-            return callback({ roomId, players: room.players });
+            return callback({ roomId, players: room.players, mode: room.mode });
         }
 
         if (potentialReconnectPlayer && room.phase !== 'lobby' && room.phase !== 'finished') {
@@ -175,7 +195,7 @@ io.on("connection", (socket) => {
             // Send the full current game state to the reconnected player
             socket.emit("state", serializeRoomState(room));
             console.log(`[${roomId}] Reconnection successful for ${trimmedName}. Old ID: ${oldSocketId}, New ID: ${socket.id}`);
-            return callback({ roomId, players: room.players }); // Confirm join/reconnect
+            return callback({ roomId, players: room.players, mode: room.mode }); // Confirm join/reconnect
         }
         // --- End Reconnection Logic ---
 
@@ -206,7 +226,7 @@ io.on("connection", (socket) => {
             console.log(`[${roomId}] ${newPlayer.name} (${socket.id}) joined room.`);
             // Emit updated player list to everyone in the room
             io.to(roomId).emit("players", room.players);
-            callback({ roomId, players: room.players }); // Confirm join
+            callback({ roomId, players: room.players, mode: room.mode }); // Confirm join
         } catch (error) {
             console.error(`[${roomId}] Error adding player ${trimmedName}:`, error);
             callback({ error: "Nepodařilo se připojit k místnosti." });
@@ -498,6 +518,33 @@ function initializeGame(roomId) {
         p.ready = false; // Reset ready status
         p.initialOrder = index; // Store the order *as they are now* before draft sorting
     });
+
+    if (room.mode === 'team') {
+        room.teams = [
+            { id: 'A', name: 'Team A', score: 0 },
+            { id: 'B', name: 'Team B', score: 0 }
+        ];
+        room.players.forEach((p, idx) => { p.team = idx % 2 === 0 ? 'A' : 'B'; });
+    } else {
+        room.teams = [];
+    }
+
+    if (room.mode === 'timeAttack') {
+        room.timeRemaining = TIME_ATTACK_LIMIT;
+        room.globalTimer = setInterval(() => {
+            const r = rooms[roomId];
+            if (!r) return clearInterval(room.globalTimer);
+            r.timeRemaining--;
+            if (r.timeRemaining <= 0) {
+                endGame(roomId, 'Vypršel čas!');
+            } else {
+                io.to(roomId).emit('time', { timeRemaining: r.timeRemaining });
+            }
+        }, 1000);
+    } else {
+        room.timeRemaining = null;
+        room.globalTimer = null;
+    }
     // Create the definitive initialPlayerOrder list based on current player order
     room.initialPlayerOrder = room.players.map(p => ({ id: p.id, name: p.name, initialOrder: p.initialOrder }));
     console.log(`[${roomId}] Initial player order (for turns): ${room.initialPlayerOrder.map(p=>p.name).join(', ')}`);
@@ -724,7 +771,7 @@ function handleDraftPick(socket, roomId, territoryId) {
     // Apply first pick bonus if this is the player's absolute first territory
     let bonusMsg = "";
     if (player.territories.length === 1 && FIRST_PICK_BONUS > 0) {
-        player.score = (player.score || 0) + FIRST_PICK_BONUS;
+        addScore(room, player, FIRST_PICK_BONUS);
         bonusMsg = ` (+${FIRST_PICK_BONUS}b bonus za první zábor)`;
         console.log(`[${roomId}] ${player.name} received first pick bonus.`);
     }
@@ -1109,7 +1156,7 @@ function evaluateSingleAnswer(roomId) {
         if (!player.territories.includes(territory.id)) {
             player.territories.push(territory.id); // Add to player's list
         }
-        player.score += 50; // Award points
+        addScore(room, player, 50); // Award points
         resultText = `${player.name} úspěšně obsadil ${territory.id}! (+50 bodů)`;
         successfulClaim = true;
         console.log(`[${roomId}] Claim successful by ${player.name} on ${territory.id}.`);
@@ -1235,13 +1282,13 @@ function evaluateDuel(roomId) {
             console.log(`[${roomId}] Defender ${oldOwnerId} left, territory ${territory.id} already released.`);
         }
 
-        attacker.score += 100; // Points for winning attack
+        addScore(room, attacker, 100); // Points for winning attack
         resultText = `${attacker.name} vyhrál duel o ${territory.id}! ${resultReason} (+100b)`;
 
     } else if (winnerId === td.defenderId && defender && territory) { // Defender wins
         console.log(`[${roomId}] Duel Winner: Defender ${defender.name} (${resultReason})`);
         // Territory owner doesn't change
-        defender.score += 50; // Points for successful defense
+        addScore(room, defender, 50); // Points for successful defense
         resultText = `${defender.name} ubránil ${territory.id}! ${resultReason} (+50b)`;
     } else {
         // Handle cases where winner/loser/territory might be missing after disconnect
@@ -1488,6 +1535,7 @@ function clearRoomTimers(room) {
     if (room.prepTimer) { clearTimeout(room.prepTimer); room.prepTimer = null; clearedCount++; }
     if (room.questionTimer) { clearTimeout(room.questionTimer); room.questionTimer = null; clearedCount++; }
     if (room.revealTimer) { clearTimeout(room.revealTimer); room.revealTimer = null; clearedCount++; }
+    if (room.globalTimer) { clearInterval(room.globalTimer); room.globalTimer = null; clearedCount++; }
     // if (clearedCount > 0) console.log(`[${room.id}] Cleared ${clearedCount} timers.`);
 }
 
@@ -1506,6 +1554,7 @@ function serializeRoomState(room) {
     return {
         // Core State
         roomId: room.id,
+        mode: room.mode,
         phase: room.phase,
         turnCounter: room.turnCounter,
         activePlayerId: room.activePlayerId,
@@ -1517,6 +1566,7 @@ function serializeRoomState(room) {
             id: p.id,
             name: p.name,
             score: p.score || 0,
+            team: p.team || null,
             // Send territory IDs owned by the player
             territories: Array.isArray(p.territories) ? p.territories : [],
             // Client doesn't strictly need 'ready' or 'initialOrder' here,
@@ -1526,6 +1576,9 @@ function serializeRoomState(room) {
 
         // Initial Order (for consistent colors and turn display)
         initialPlayerOrder: initialPlayerOrderSummary,
+
+        teams: room.teams || [],
+        timeRemaining: room.timeRemaining,
 
         // Territory Data
         territories: territories.map(t => ({
