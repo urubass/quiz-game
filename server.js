@@ -25,6 +25,10 @@ const DRAFT_OTHERS_PICKS = 1;
 const MAX_TURNS = 50;
 const FIRST_PICK_BONUS = 100; // Bonus score for first territory claimed in draft
 
+// Interval and threshold for timer watchdog
+const TIMER_CHECK_INTERVAL = 5; // seconds
+const TIMER_THRESHOLD_MS = 2000; // allowed timer delay
+
 // Region IDs
 const REGIONS = ["PHA", "STC", "JHC", "PLK", "KVK", "ULK", "LBK", "HKK", "PAK", "OLK", "MSK", "JHM", "ZLK", "VYS"];
 // Adjacency list for server-side validation
@@ -533,7 +537,7 @@ function sendDraftOrderQuestion(roomId) {
     io.to(roomId).emit("prep", { time: PREP_TIME, type: 'draft' });
 
     // Set timer for the prep phase
-    room.prepTimer = setTimeout(() => {
+    startRoomTimer(room, 'prepTimer', PREP_TIME, () => {
         // Double-check if room still exists and phase is correct
         if (!rooms[roomId] || rooms[roomId].phase !== 'draft-order-question') {
             console.log(`[${roomId}] Draft question cancelled or phase changed before prep time ended.`);
@@ -553,15 +557,14 @@ function sendDraftOrderQuestion(roomId) {
         });
 
         // Set timer for the answer phase
-        room.questionTimer = setTimeout(() => {
+        startRoomTimer(room, 'questionTimer', ANSWER_TIME, () => {
             // Double-check phase again
             if (rooms[roomId] && rooms[roomId].phase === 'draft-order-question') {
                 console.log(`[${roomId}] Draft question time up. Evaluating answers...`);
                 evaluateDraftOrder(roomId); // Evaluate answers after time limit
             }
-        }, ANSWER_TIME * 1000);
-
-    }, PREP_TIME * 1000);
+        });
+    });
 }
 
 function evaluateDraftOrder(roomId) {
@@ -631,11 +634,11 @@ function evaluateDraftOrder(roomId) {
     io.to(roomId).emit("reveal", revealData);
 
     // Set timer for reveal duration before starting draft picks
-    room.revealTimer = setTimeout(() => {
+    startRoomTimer(room, 'revealTimer', REVEAL_TIME, () => {
         if (rooms[roomId] && rooms[roomId].phase === 'draft-order-evaluating') {
             startDraftPhase(roomId); // Proceed to draft picking phase
         }
-    }, REVEAL_TIME * 1000);
+    });
 }
 
 
@@ -933,7 +936,7 @@ function sendSinglePlayerQuestion(roomId, playerId, type) {
     // Emit prep signal
     io.to(roomId).emit("prep", { time: PREP_TIME, type });
 
-    room.prepTimer = setTimeout(() => {
+    startRoomTimer(room, 'prepTimer', PREP_TIME, () => {
         if (!rooms[roomId] || rooms[roomId].phase !== `${type}-question` || !rooms[roomId].currentQuestion) {
             console.log(`[${roomId}] ${type} question cancelled or phase changed before prep end.`); return;
         }
@@ -946,13 +949,13 @@ function sendSinglePlayerQuestion(roomId, playerId, type) {
         });
 
         // Set timer for the answer
-        room.questionTimer = setTimeout(() => {
+        startRoomTimer(room, 'questionTimer', ANSWER_TIME, () => {
             if (rooms[roomId] && rooms[roomId].phase === `${type}-question`) {
                 console.log(`[${roomId}] ${type} time up for ${player.name}. Evaluating...`);
                 evaluateSingleAnswer(roomId); // Evaluate after time limit
             }
-        }, ANSWER_TIME * 1000);
-    }, PREP_TIME * 1000);
+        });
+    });
 }
 
 function sendDuelQuestion(roomId, attackerId, defenderId) {
@@ -977,7 +980,7 @@ function sendDuelQuestion(roomId, attackerId, defenderId) {
     // Emit prep signal
     io.to(roomId).emit("prep", { time: PREP_TIME, type: 'duel' });
 
-    room.prepTimer = setTimeout(() => {
+    startRoomTimer(room, 'prepTimer', PREP_TIME, () => {
         if (!rooms[roomId] || rooms[roomId].phase !== 'duel-question' || !rooms[roomId].currentQuestion) {
             console.log(`[${roomId}] Duel question cancelled or phase changed before prep end.`); return;
         }
@@ -990,13 +993,13 @@ function sendDuelQuestion(roomId, attackerId, defenderId) {
         });
 
         // Set timer for the answer
-        room.questionTimer = setTimeout(() => {
+        startRoomTimer(room, 'questionTimer', ANSWER_TIME, () => {
             if (rooms[roomId] && rooms[roomId].phase === 'duel-question') {
                 console.log(`[${roomId}] Duel time up. Evaluating...`);
                 evaluateDuel(roomId); // Evaluate after time limit
             }
-        }, ANSWER_TIME * 1000);
-    }, PREP_TIME * 1000);
+        });
+    });
 }
 
 
@@ -1135,11 +1138,11 @@ function evaluateSingleAnswer(roomId) {
     io.to(roomId).emit("reveal", revealData);
 
     // Set timer for reveal duration
-    room.revealTimer = setTimeout(() => {
+    startRoomTimer(room, 'revealTimer', REVEAL_TIME, () => {
         if (rooms[roomId] && rooms[roomId].phase === 'results') {
             advanceTurn(roomId); // Proceed to next turn after reveal
         }
-    }, REVEAL_TIME * 1000);
+    });
 }
 
 
@@ -1269,11 +1272,11 @@ function evaluateDuel(roomId) {
     io.to(roomId).emit("reveal", revealData);
 
     // Set timer for reveal duration
-    room.revealTimer = setTimeout(() => {
+    startRoomTimer(room, 'revealTimer', REVEAL_TIME, () => {
         if (rooms[roomId] && rooms[roomId].phase === 'results') {
             advanceTurn(roomId); // Proceed to next turn
         }
-    }, REVEAL_TIME * 1000);
+    });
 }
 
 
@@ -1485,10 +1488,17 @@ function endGame(roomId, reason) {
 function clearRoomTimers(room) {
     if (!room) return;
     let clearedCount = 0;
-    if (room.prepTimer) { clearTimeout(room.prepTimer); room.prepTimer = null; clearedCount++; }
-    if (room.questionTimer) { clearTimeout(room.questionTimer); room.questionTimer = null; clearedCount++; }
-    if (room.revealTimer) { clearTimeout(room.revealTimer); room.revealTimer = null; clearedCount++; }
+    if (room.prepTimer) { clearTimeout(room.prepTimer); room.prepTimer = null; room.prepTimerExpires = 0; clearedCount++; }
+    if (room.questionTimer) { clearTimeout(room.questionTimer); room.questionTimer = null; room.questionTimerExpires = 0; clearedCount++; }
+    if (room.revealTimer) { clearTimeout(room.revealTimer); room.revealTimer = null; room.revealTimerExpires = 0; clearedCount++; }
     // if (clearedCount > 0) console.log(`[${room.id}] Cleared ${clearedCount} timers.`);
+}
+
+function startRoomTimer(room, key, durationSec, callback) {
+    if (!room) return;
+    if (room[key]) clearTimeout(room[key]);
+    room[key + 'Expires'] = Date.now() + durationSec * 1000;
+    room[key] = setTimeout(callback, durationSec * 1000);
 }
 
 // Serializes the room state to be sent to clients, omitting sensitive or unnecessary data
@@ -1548,6 +1558,38 @@ function serializeRoomState(room) {
     };
 }
 
+function monitorRoomTimers() {
+    const now = Date.now();
+    for (const [roomId, room] of Object.entries(rooms)) {
+        if (!room) continue;
+        const phase = room.phase;
+        if (phase === 'claim-prep' || phase === 'duel-prep') {
+            if (!room.prepTimer || now > (room.prepTimerExpires || 0) + TIMER_THRESHOLD_MS) {
+                console.warn(`[${roomId}] Prep timer missing or expired during ${phase}. Advancing turn.`);
+                advanceTurn(roomId, true);
+            }
+        } else if (phase === 'claim-question' || phase === 'duel-question') {
+            if (!room.questionTimer || now > (room.questionTimerExpires || 0) + TIMER_THRESHOLD_MS) {
+                console.warn(`[${roomId}] Question timer issue detected in phase ${phase}. Evaluating.`);
+                if (phase === 'claim-question') evaluateSingleAnswer(roomId);
+                else evaluateDuel(roomId);
+            }
+        } else if (phase === 'draft-order-question') {
+            const activeExp = room.questionTimer ? room.questionTimerExpires : room.prepTimerExpires;
+            if (!(room.prepTimer || room.questionTimer) || now > (activeExp || 0) + TIMER_THRESHOLD_MS) {
+                console.warn(`[${roomId}] Draft order timer issue detected. Forcing evaluation.`);
+                evaluateDraftOrder(roomId);
+            }
+        } else if (phase === 'draft-order-evaluating' || phase === 'results') {
+            if (!room.revealTimer || now > (room.revealTimerExpires || 0) + TIMER_THRESHOLD_MS) {
+                console.warn(`[${roomId}] Reveal timer missing or expired during ${phase}. Advancing.`);
+                if (phase === 'draft-order-evaluating') startDraftPhase(roomId);
+                else advanceTurn(roomId);
+            }
+        }
+    }
+}
+
 /* === SERVER SETUP ====================================================== */
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
@@ -1565,6 +1607,9 @@ app.get('*', (req, res) => {
 // Start the server
 if (require.main === module) {
     server.listen(PORT, () => console.log(`Dobyvatel server running on http://localhost:${PORT}`));
+
+    // Periodic watchdog
+    setInterval(monitorRoomTimers, TIMER_CHECK_INTERVAL * 1000);
 
     // Optional: Graceful shutdown
     process.on('SIGINT', () => {
