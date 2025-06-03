@@ -170,7 +170,7 @@ function scheduleBotAction(roomId) {
 io.on("connection", (socket) => {
     console.log(`Socket connected: ${socket.id}`);
 
-    socket.on("create", ({ name, bots = 0 }, callback) => {
+    socket.on("create", ({ name, bots = 0, categories = [] }, callback) => {
         // Input validation
         if (typeof name !== 'string' || name.trim().length === 0 || name.length > 20) {
             return callback({ error: "Neplatné jméno (max 20 znaků)." });
@@ -191,6 +191,7 @@ io.on("connection", (socket) => {
                 id: roomId,
                 players: [hostPlayer],
                 hostId: socket.id,
+                categories: Array.isArray(categories) ? categories.filter(c => typeof c === 'string' && c.trim()).map(c => c.trim()) : [],
                 phase: "lobby", // Initial phase
                 turnCounter: 0,
                 deck: [], // Will be filled on game start
@@ -223,7 +224,7 @@ io.on("connection", (socket) => {
 
             console.log(`[${roomId}] Room created by ${hostPlayer.name} (${socket.id}) with ${numBots} bots`);
             // Send back the necessary info
-            callback({ roomId, players: rooms[roomId].players });
+            callback({ roomId, players: rooms[roomId].players, categories: rooms[roomId].categories });
         } catch (error) {
             console.error("Error creating room:", error);
             callback({ error: "Nepodařilo se vytvořit místnost. Zkuste to prosím znovu." });
@@ -257,7 +258,7 @@ io.on("connection", (socket) => {
             socket.join(roomId); // Ensure they are in the socket.io room
             // Send full state in case they missed updates
             socket.emit("state", serializeRoomState(room));
-            return callback({ roomId, players: room.players });
+            return callback({ roomId, players: room.players, categories: room.categories });
         }
 
         if (potentialReconnectPlayer && room.phase !== 'lobby' && room.phase !== 'finished') {
@@ -272,7 +273,7 @@ io.on("connection", (socket) => {
             // Send the full current game state to the reconnected player
             socket.emit("state", serializeRoomState(room));
             console.log(`[${roomId}] Reconnection successful for ${trimmedName}. Old ID: ${oldSocketId}, New ID: ${socket.id}`);
-            return callback({ roomId, players: room.players }); // Confirm join/reconnect
+            return callback({ roomId, players: room.players, categories: room.categories }); // Confirm join/reconnect
         }
         // --- End Reconnection Logic ---
 
@@ -304,7 +305,7 @@ io.on("connection", (socket) => {
             console.log(`[${roomId}] ${newPlayer.name} (${socket.id}) joined room.`);
             // Emit updated player list to everyone in the room
             io.to(roomId).emit("players", room.players);
-            callback({ roomId, players: room.players }); // Confirm join
+            callback({ roomId, players: room.players, categories: room.categories }); // Confirm join
         } catch (error) {
             console.error(`[${roomId}] Error adding player ${trimmedName}:`, error);
             callback({ error: "Nepodařilo se připojit k místnosti." });
@@ -568,15 +569,27 @@ function initializeGame(roomId) {
         console.error(`[${roomId}] Cannot initialize game: Room not found.`);
         return;
     }
-    if (!questions || questions.length < room.players.length + MAX_TURNS) { // Basic check for sufficient questions
-        console.error(`[${roomId}] Cannot initialize game: Insufficient questions loaded (${questions.length}).`);
-        endGame(roomId, "Nedostatek otázek pro hru."); // End game immediately
+    if (!questions || questions.length === 0) {
+        console.error(`[${roomId}] Cannot initialize game: No questions loaded.`);
+        endGame(roomId, "Nedostatek otázek pro hru.");
         return;
     }
 
     console.log(`[${roomId}] Initializing game state...`);
     room.phase = "initializing";
-    room.deck = shuffle([...questions]); // Create a shuffled deck for this game
+    let pool = questions;
+    if (Array.isArray(room.categories) && room.categories.length > 0) {
+        pool = questions.filter(q => room.categories.includes(q.category));
+        if (pool.length === 0) {
+            console.error(`[${roomId}] No questions match selected categories: ${room.categories.join(', ')}`);
+            endGame(roomId, "Nebyly nalezeny otázky pro zvolené kategorie.");
+            return;
+        }
+    }
+    if (pool.length < room.players.length + MAX_TURNS) {
+        console.warn(`[${roomId}] Warning: Question pool (${pool.length}) may be insufficient for full game length.`);
+    }
+    room.deck = shuffle([...pool]); // Create a shuffled deck for this game
     room.turnCounter = 0;
     room.currentQuestion = null;
     room.answers = {};
