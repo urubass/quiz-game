@@ -1563,16 +1563,20 @@ app.get('*', (req, res) => {
 });
 
 // Start the server
-server.listen(PORT, () => console.log(`Dobyvatel server running on http://localhost:${PORT}`));
+if (require.main === module) {
+    server.listen(PORT, () => console.log(`Dobyvatel server running on http://localhost:${PORT}`));
 
-// Optional: Graceful shutdown
-process.on('SIGINT', () => {
-    console.log('SIGINT signal received: closing HTTP server');
-    io.close(() => {
-        console.log('Socket.IO server closed');
+    // Optional: Graceful shutdown
+    process.on('SIGINT', () => {
+        console.log('SIGINT signal received: closing HTTP server');
+        io.close(() => {
+            console.log('Socket.IO server closed');
+        });
+        server.close(() => {
+            console.log('HTTP server closed');
+            process.exit(0);
+        });
     });
-    server.close(() => {
-        console.log('HTTP server closed');
-        process.exit(0);
-    });
-});
+}
+
+module.exports.areAdjacent = areAdjacent;
