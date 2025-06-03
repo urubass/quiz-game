@@ -42,3 +42,7 @@ This runs the Jest tests in the `test` directory.
 
 Your service will then listen on the provided `PORT`.
 
+## Scores API
+
+Finished games are stored in `scores.json`. The endpoint `/scores` returns the last saved games and is used by the client to display a small leaderboard after each match.
+

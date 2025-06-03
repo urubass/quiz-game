@@ -267,9 +267,13 @@ function displayGameOverOverlay() {
         <p style="margin-bottom: 0.5rem;">${reasonText}</p>
         <p style="font-size: 1.1em; font-weight: bold; margin-bottom: 1.5rem;">${winnerText}</p>
         <h3>Konečné pořadí:</h3>
-        <ol style="list-style: decimal; padding-left: 2rem; margin: 0.5rem 0 2rem 0; text-align: left; max-width: 300px;">
+        <ol style="list-style: decimal; padding-left: 2rem; margin: 0.5rem 0 1.5rem 0; text-align: left; max-width: 300px;">
             ${sortedPlayers.map(p => `<li>${p.name} (${p.score || 0}b, ${Array.isArray(p.territories) ? p.territories.length : 0} krajů)</li>`).join('')}
         </ol>
+        <div id="recent-scores-container" style="margin-bottom:1rem;">
+            <h3>Žebříček posledních her</h3>
+            <ol id="recent-scores" style="list-style: decimal; padding-left:2rem; text-align:left; max-width:300px;"></ol>
+        </div>
         <button onclick="window.location.reload()" style="padding: 0.8rem 1.5rem; font-size: 1rem; cursor: pointer;">Nová hra</button>
     `;
 
@@ -283,6 +287,21 @@ function displayGameOverOverlay() {
         // Fallback: append to body or app if map-wrapper fails
         document.body.appendChild(overlay);
     }
+
+    // Fetch recent scores and populate list
+    fetch('/scores')
+        .then(r => r.json())
+        .then(scores => {
+            const list = $("#recent-scores");
+            if (!list) return;
+            const recent = scores.slice(-5).reverse();
+            list.innerHTML = recent.map(g => {
+                const date = new Date(g.time).toLocaleString();
+                const winner = g.players && g.players[0] ? `${g.players[0].name} (${g.players[0].score}b)` : 'N/A';
+                return `<li>${date}: ${winner}</li>`;
+            }).join('');
+        })
+        .catch(err => console.error('Failed to load scores', err));
 }
 
 
