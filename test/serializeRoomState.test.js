@@ -42,16 +42,16 @@ describe('serializeRoomState', () => {
       turnIndex: 0,
       lastResult: 'some result',
       players: [
-        { id: 'a1', name: 'Alice', score: 3, team: undefined, territories: ['PHA'] },
-        { id: 'b2', name: 'Bob', score: 0, team: undefined, territories: [] }
+        { id: 'a1', name: 'Alice', score: 3, team: undefined, capitalId: null, territories: ['PHA'] },
+        { id: 'b2', name: 'Bob', score: 0, team: undefined, capitalId: null, territories: [] }
       ],
       initialPlayerOrder: [
         { id: 'a1', name: 'Alice', initialOrder: 0, team: undefined },
         { id: 'b2', name: 'Bob', initialOrder: 1, team: undefined }
       ],
       territories: [
-        { id: 'PHA', owner: 'a1' },
-        { id: 'STC', owner: null }
+        { id: 'PHA', owner: 'a1', lives: undefined },
+        { id: 'STC', owner: null, lives: undefined }
       ],
       turnData: {
         type: 'attack',

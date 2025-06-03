@@ -608,8 +608,8 @@ function initializeGame(roomId) {
     room.lastResult = null;
     clearRoomTimers(room); // Clear any leftover timers
 
-    // Initialize territories
-    room.territories = REGIONS.map(id => ({ id, owner: null }));
+    // Initialize territories with lives
+    room.territories = REGIONS.map(id => ({ id, owner: null, lives: 1 }));
 
     // Reset players and determine initial order *before* draft question
     room.players.forEach((p, index) => {
@@ -617,6 +617,7 @@ function initializeGame(roomId) {
         p.territories = [];
         p.ready = false; // Reset ready status
         p.initialOrder = index; // Store the order *as they are now* before draft sorting
+        p.capitalId = null; // Track player's capital territory
     });
     // Build team player lists for turn rotation
     room.teamPlayers = {};
@@ -849,7 +850,14 @@ function handleDraftPick(socket, roomId, territoryId) {
     // --- Apply Pick ---
     territory.owner = player.id;
     if (!Array.isArray(player.territories)) { player.territories = []; }
+    const isFirst = player.territories.length === 0;
     player.territories.push(territory.id);
+    if (isFirst) {
+        player.capitalId = territory.id;
+        territory.lives = 3;
+    } else {
+        territory.lives = 1;
+    }
     room.draftData.picksMadeTotal++;
 
     // Store the first pick ID if this is the winner's first pick
@@ -1257,8 +1265,15 @@ function evaluateSingleAnswer(roomId) {
         // Correct answer
         territory.owner = pId; // Assign territory owner
         if (!Array.isArray(player.territories)) player.territories = [];
+        const first = player.territories.length === 0;
         if (!player.territories.includes(territory.id)) {
             player.territories.push(territory.id); // Add to player's list
+        }
+        if (first || !player.capitalId) {
+            player.capitalId = territory.id;
+            territory.lives = 3;
+        } else {
+            territory.lives = 1;
         }
         player.score += 50; // Award points
         resultText = `${player.name} úspěšně obsadil ${territory.id}! (+50 bodů)`;
@@ -1372,22 +1387,36 @@ function evaluateDuel(roomId) {
     if (winnerId === td.attackerId && attacker && territory) { // Attacker wins
         console.log(`[${roomId}] Duel Winner: Attacker ${attacker.name} (${resultReason})`);
         const oldOwnerId = territory.owner;
-        territory.owner = attacker.id; // Change territory owner
 
-        // Update attacker's territory list
-        if (!Array.isArray(attacker.territories)) attacker.territories = [];
-        if (!attacker.territories.includes(territory.id)) attacker.territories.push(territory.id);
+        territory.lives = (territory.lives || 1) - 1;
 
-        // Remove from defender's list (if they still exist)
-        if (defender && Array.isArray(defender.territories)) {
-            const terrIndex = defender.territories.indexOf(territory.id);
-            if (terrIndex > -1) defender.territories.splice(terrIndex, 1);
-        } else if (oldOwnerId && !defender) {
-            console.log(`[${roomId}] Defender ${oldOwnerId} left, territory ${territory.id} already released.`);
+        if (territory.lives <= 0) {
+            territory.owner = attacker.id; // Change owner when lives depleted
+
+            // Update attacker's territory list
+            if (!Array.isArray(attacker.territories)) attacker.territories = [];
+            if (!attacker.territories.includes(territory.id)) attacker.territories.push(territory.id);
+
+            // Remove from defender's list
+            if (defender && Array.isArray(defender.territories)) {
+                const terrIndex = defender.territories.indexOf(territory.id);
+                if (terrIndex > -1) defender.territories.splice(terrIndex, 1);
+            } else if (oldOwnerId && !defender) {
+                console.log(`[${roomId}] Defender ${oldOwnerId} left, territory ${territory.id} already released.`);
+            }
+
+            attacker.score += 100; // Points for winning attack
+            resultText = `${attacker.name} vyhrál duel o ${territory.id}! ${resultReason} (+100b)`;
+
+            if (defender && defender.capitalId === territory.id) {
+                eliminatePlayer(roomId, defender.id);
+                resultText += ` ${defender.name} byl vyřazen.`;
+            }
+        } else {
+            // Territory not captured yet (capital hit)
+            attacker.score += 50; // small bonus for successful hit
+            resultText = `${attacker.name} zasáhl ${territory.id}. ${resultReason} (zbyva ${territory.lives}) (+50b)`;
         }
-
-        attacker.score += 100; // Points for winning attack
-        resultText = `${attacker.name} vyhrál duel o ${territory.id}! ${resultReason} (+100b)`;
 
     } else if (winnerId === td.defenderId && defender && territory) { // Defender wins
         console.log(`[${roomId}] Duel Winner: Defender ${defender.name} (${resultReason})`);
@@ -1425,6 +1454,48 @@ function evaluateDuel(roomId) {
             advanceTurn(roomId); // Proceed to next turn
         }
     }, REVEAL_TIME * 1000);
+}
+
+function eliminatePlayer(roomId, playerId) {
+    const room = rooms[roomId];
+    if (!room) return;
+    const player = getPlayer(room, playerId);
+    if (!player || player.spectator) return;
+
+    console.log(`[${roomId}] Eliminating player ${player.name}`);
+    player.spectator = true;
+    player.score = 0;
+
+    // Remove from turn order
+    const idx = room.initialPlayerOrder.findIndex(p => p.id === playerId);
+    if (idx !== -1) {
+        room.initialPlayerOrder.splice(idx, 1);
+        if (idx < room.turnIndex) room.turnIndex--;
+        if (room.initialPlayerOrder.length > 0) {
+            room.turnIndex %= room.initialPlayerOrder.length;
+        } else {
+            room.turnIndex = 0;
+        }
+    }
+
+    // Release owned territories
+    room.territories.forEach(t => {
+        if (t.owner === playerId) {
+            t.owner = null;
+            t.lives = t.lives || 1;
+        }
+    });
+
+    // Remove from team lists
+    if (player.team && room.teamPlayers[player.team]) {
+        room.teamPlayers[player.team] = room.teamPlayers[player.team].filter(id => id !== playerId);
+    }
+
+    // Check if game should end
+    const active = room.players.filter(p => !p.spectator).length;
+    if (active < MIN_PLAYERS) {
+        endGame(roomId, `Nedostatek hráčů (${player.name} byl vyřazen).`);
+    }
 }
 
 
