@@ -1,20 +1,13 @@
 // Utility helpers
-const ADJACENCY = {
-  "PHA": ["STC"],
-  "STC": ["PHA", "JHC", "PLK", "KVK", "ULK", "LBK", "HKK", "PAK", "VYS"],
-  "JHC": ["STC", "PLK", "VYS", "JHM"],
-  "PLK": ["STC", "JHC", "KVK"],
-  "KVK": ["STC", "PLK", "ULK"],
-  "ULK": ["STC", "KVK", "LBK"],
-  "LBK": ["STC", "ULK", "HKK"],
-  "HKK": ["STC", "LBK", "PAK"],
-  "PAK": ["STC", "HKK", "OLK", "VYS", "JHM"],
-  "VYS": ["STC", "JHC", "PAK", "JHM", "OLK"],
-  "JHM": ["JHC", "VYS", "PAK", "OLK", "ZLK"],
-  "ZLK": ["JHM", "OLK", "MSK"],
-  "OLK": ["PAK", "VYS", "JHM", "ZLK", "MSK"],
-  "MSK": ["OLK", "ZLK"]
-};
+const fs = require('fs');
+const path = require('path');
+
+const ADJACENCY = JSON.parse(
+  fs.readFileSync(
+    path.join(__dirname, '../data/adjacency.json'),
+    'utf8'
+  )
+);
 
 function areAdjacent(r1, r2) {
   if (!r1 || !r2 || !ADJACENCY[r1] || !ADJACENCY[r2]) return false;
