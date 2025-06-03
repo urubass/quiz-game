@@ -34,10 +34,11 @@ function serializeRoomState(room) {
       name: p.name,
       score: p.score || 0,
       team: p.team,
+      capitalId: p.capitalId || null,
       territories: Array.isArray(p.territories) ? p.territories : []
     })),
     initialPlayerOrder: initialPlayerOrderSummary,
-    territories: territories.map(t => ({ id: t.id, owner: t.owner })),
+    territories: territories.map(t => ({ id: t.id, owner: t.owner, lives: t.lives })),
     turnData: room.turnData ? {
       type: room.turnData.type,
       targetTerritoryId: room.turnData.targetTerritoryId,

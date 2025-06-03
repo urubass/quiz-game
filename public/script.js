@@ -74,7 +74,7 @@ function Lobby({ roomId, players, onReady, onStart, myId }) {
   );
 }
 
-function GameBoard({ players }) {
+function GameBoard({ players, territories }) {
   return (
     React.createElement('div', { id: 'game-board' },
       React.createElement('div', { id: 'map-wrapper' },
@@ -83,7 +83,11 @@ function GameBoard({ players }) {
       React.createElement('div', { id: 'score-panel' },
         React.createElement('h3', null, 'Sk\u00f3re'),
         React.createElement('ul', null,
-          players.map(p => React.createElement('li', { key: p.id }, `${p.name}: ${p.score}`))
+          players.map(p => {
+            const cap = territories.find(t => t.id === p.capitalId);
+            const lives = cap ? cap.lives : 0;
+            return React.createElement('li', { key: p.id }, `${p.name}: ${p.score} ${p.capitalId ? '(' + p.capitalId + ' ' + lives + ')' : ''}`);
+          })
         )
       )
     )
@@ -160,6 +164,7 @@ function App() {
     myId: '',
     myName: localStorage.getItem('dobyvatel_playerName') || '',
     players: [],
+    territories: [],
     question: null,
     revealData: null,
     phase: 'lobby'
@@ -224,7 +229,7 @@ function App() {
       myId: state.myId
     });
   } else {
-    content = React.createElement(GameBoard, { players: state.players });
+    content = React.createElement(GameBoard, { players: state.players, territories: state.territories || [] });
   }
 
   return React.createElement(React.Fragment, null,
