@@ -90,8 +90,20 @@ function GameBoard({ players }) {
   );
 }
 
-function Overlay({ question, lastResult, onAnswer }) {
-  if (!question && !lastResult) return null;
+function Overlay({ question, revealData, players, onAnswer }) {
+  if (!question && !revealData) return null;
+  const results = revealData;
+  let fastestId = null;
+  if (results && results.playerAnswers && results.correctIndex !== undefined) {
+    const correctTimes = Object.entries(results.playerAnswers)
+      .filter(([id, a]) => a.answer === results.correctIndex && typeof a.timeReceived === 'number')
+      .map(([id, a]) => ({ id, time: a.timeReceived }));
+    if (correctTimes.length) {
+      correctTimes.sort((a, b) => a.time - b.time);
+      fastestId = correctTimes[0].id;
+    }
+  }
+
   return (
     React.createElement('div', { className: 'modal', style: { display: 'flex' } },
       React.createElement('div', { className: 'modal-content' },
@@ -110,7 +122,31 @@ function Overlay({ question, lastResult, onAnswer }) {
             )
           )
         ) : (
-          React.createElement('div', null, lastResult)
+          React.createElement('div', { id: 'reveal-results' },
+            React.createElement('div', { className: 'result-text' }, results.resultText),
+            React.createElement('ul', { className: 'player-result-list' },
+              players.map(p => {
+                const ans = results.playerAnswers ? results.playerAnswers[p.id] : null;
+                const correct = ans && ans.answer === results.correctIndex;
+                const time = ans && ans.timeReceived;
+                const fastest = fastestId && fastestId === p.id && correct;
+                const icon = ans ? (correct ? '\u2714' : '\u2716') : '\u23F3';
+                const diff = fastestId && time && results.playerAnswers[fastestId]
+                  ? time - results.playerAnswers[fastestId].timeReceived
+                  : 0;
+                return React.createElement('li', { key: p.id, className: 'player-result-item' + (fastest ? ' fastest' : '') },
+                  React.createElement('span', { className: 'player-name' }, p.name),
+                  React.createElement('span', {
+                    className: 'result-icon ' + (correct ? 'correct' : (ans ? 'incorrect' : 'timeout'))
+                  }, icon),
+                  time ? React.createElement('span', { className: 'answer-time' },
+                    fastest ? '\u272A ' : '',
+                    diff ? `+${diff}ms` : (fastest ? '0ms' : '')
+                  ) : null
+                );
+              })
+            )
+          )
         )
       )
     )
@@ -125,7 +161,7 @@ function App() {
     myName: localStorage.getItem('dobyvatel_playerName') || '',
     players: [],
     question: null,
-    lastResult: null,
+    revealData: null,
     phase: 'lobby'
   });
 
@@ -144,13 +180,13 @@ function App() {
       }));
     });
     socket.on('question', ({ q }) => {
-      setState(s => ({ ...s, question: q, lastResult: null }));
+      setState(s => ({ ...s, question: q, revealData: null }));
     });
-    socket.on('reveal', ({ resultText }) => {
-      setState(s => ({ ...s, question: null, lastResult: resultText }));
+    socket.on('reveal', data => {
+      setState(s => ({ ...s, question: null, revealData: data }));
     });
     socket.on('gameOver', ({ reason, players }) => {
-      setState(s => ({ ...s, phase: 'finished', lastResult: reason, players }));
+      setState(s => ({ ...s, phase: 'finished', revealData: { resultText: reason }, players }));
     });
   }, []);
 
@@ -193,7 +229,7 @@ function App() {
 
   return React.createElement(React.Fragment, null,
     content,
-    React.createElement(Overlay, { question: state.question, lastResult: state.lastResult, onAnswer })
+    React.createElement(Overlay, { question: state.question, revealData: state.revealData, players: state.players, onAnswer })
   );
 }
 
