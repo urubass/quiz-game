@@ -4,7 +4,8 @@
   "description": "Real‑time online quiz game for 1–6 players",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "jest"
   },
   "engines": {
     "node": ">=18"
@@ -12,5 +13,8 @@
   "dependencies": {
     "express": "^4.19.2",
     "socket.io": "^4.7.5"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
   }
 }
