@@ -1171,9 +1171,11 @@ socket.on("gameOver", ({ reason, players }) => {
     render(); // Re-render to potentially update panels and trigger overlay display
 });
 
-const ADJACENCY_CLIENT = {
-    "PHA": ["STC"], "STC": ["PHA", "JHC", "PLK", "KVK", "ULK", "LBK", "HKK", "PAK", "VYS"], "JHC": ["STC", "PLK", "VYS", "JHM"], "PLK": ["STC", "JHC", "KVK"], "KVK": ["STC", "PLK", "ULK"], "ULK": ["STC", "KVK", "LBK"], "LBK": ["STC", "ULK", "HKK"], "HKK": ["STC", "LBK", "PAK"], "PAK": ["STC", "HKK", "VYS", "OLK", "JHM"], "VYS": ["STC", "JHC", "PAK", "JHM", "OLK"], "JHM": ["JHC", "VYS", "PAK", "OLK", "ZLK"], "ZLK": ["JHM", "OLK", "MSK"], "OLK": ["PAK", "VYS", "JHM", "ZLK", "MSK"], "MSK": ["OLK", "ZLK"]
-};
+let ADJACENCY_CLIENT = {};
+fetch('/adjacency')
+    .then(r => r.json())
+    .then(d => { ADJACENCY_CLIENT = d; })
+    .catch(err => console.error('Failed to load adjacency', err));
 
 // Add region names for display purposes
 const REGION_NAMES_CLIENT = {

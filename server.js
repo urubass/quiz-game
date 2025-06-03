@@ -5,7 +5,7 @@ const http = require('http');
 const { Server } = require('socket.io');
 
 const registerSocketHandlers = require('./src/socketHandlers');
-const { areAdjacent } = require('./src/utils');
+const { areAdjacent, ADJACENCY } = require('./src/utils');
 
 function createServer() {
   const app = express();
@@ -34,6 +34,10 @@ function createServer() {
         res.status(500).json({ error: 'Unable to read scores' });
       }
     });
+  });
+
+  app.get('/adjacency', (req, res) => {
+    res.json(ADJACENCY);
   });
 
   app.use(express.static(path.join(__dirname, 'public')));
