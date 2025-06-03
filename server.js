@@ -50,4 +50,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { createServer, areAdjacent };
+module.exports = { createServer };
