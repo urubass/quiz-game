@@ -40,6 +40,9 @@ let state = {
     territories: [], phase: "lobby", turnIndex: 0, myTurn: false, activePlayerId: null,
     question: null, prepTime: 0, lastResult: null, turnCounter: 0, turnData: null,
     lastRevealedQuestion: null,
+    mode: "standard",
+    teams: [],
+    timeRemaining: null,
 };
 
 let questionTimerInterval = null;
@@ -65,6 +68,11 @@ function renderHome() {
         <div id="home-card" class="card">
             <h1>Dobyvatel ČR</h1>
             <input id="name" class="input" placeholder="Tvé jméno" value="${state.myName || ''}" />
+            <select id="mode" class="input" value="${state.mode}">
+                <option value="standard">Standard</option>
+                <option value="team">Týmový</option>
+                <option value="timeAttack">Time Attack</option>
+            </select>
             <button id="create">Vytvořit hru</button>
             <input id="code" class="input" placeholder="Kód místnosti (6 znaků)" />
             <button id="join" class="secondary">Připojit se ke hře</button>
@@ -72,7 +80,8 @@ function renderHome() {
         </div>`;
     $("#create").onclick = () => {
         const name = $("#name").value.trim(); if (!name) { $("#home-error").textContent = "Zadejte prosím jméno."; return; }
-        $("#home-error").textContent = ""; state.myName = name; socket.emit("create", { name }, handleRoomResponse);
+        const mode = $("#mode").value;
+        $("#home-error").textContent = ""; state.myName = name; socket.emit("create", { name, mode }, handleRoomResponse);
     };
     $("#join").onclick = () => {
         const name = $("#name").value.trim(); const code = $("#code").value.trim().toUpperCase(); if (!name || !code || code.length !== 6) { $("#home-error").textContent = "Zadejte jméno a platný 6místný kód."; return; }
@@ -87,6 +96,7 @@ function handleRoomResponse(res) {
     } else {
         console.log("Room created/joined successfully:", res);
         state.roomId = res.roomId; state.myId = socket.id; state.players = res.players; state.view = "lobby";
+        state.mode = res.mode || 'standard';
         render();
     }
 }
@@ -411,9 +421,17 @@ function updateInfoPanel() {
         else if (state.turnData.type === 'duel' && defender) { turnDataInfo = `Akce: ${actor} útočí na ${targetRegionName} (${defender})`; }
     }
 
+    const timerInfo = (state.mode === 'timeAttack' && state.timeRemaining != null)
+        ? `<div>Zbývající čas: ${state.timeRemaining}s</div>` : '';
+    const teamsInfo = (state.mode === 'team' && Array.isArray(state.teams) && state.teams.length >= 2)
+        ? `<div style="margin-top:0.3em;">${state.teams[0].name}: ${state.teams[0].score} vs ${state.teams[1].name}: ${state.teams[1].score}</div>`
+        : '';
+
     infoPanel.innerHTML = `
         <h3>Stav Hry (Kolo ${state.turnCounter || 0})</h3> <div>${turnInfo}</div>
         <div style="font-size: 0.9em; color: var(--text-muted);">Fáze: ${phaseDescription}</div>
+        ${timerInfo}
+        ${teamsInfo}
         ${turnDataInfo ? `<div style="font-size: 0.9em; color: var(--text-muted); margin-top: 0.2em;">${turnDataInfo}</div>` : ''}
         ${state.lastResult ? `<div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--border-color); font-style: italic;">Poslední výsledek: ${state.lastResult}</div>` : ''}
     `;
@@ -663,17 +681,22 @@ function updateScorePanel() {
         const isActiveClass = p.id === state.activePlayerId ? 'active-player-row' : '';
         const territoryCount = Array.isArray(p.territories) ? p.territories.length : 0;
 
+        const teamLabel = p.team ? ` (${p.team})` : '';
         rows += `<tr class="${isActiveClass}">
                     <td>${index + 1}.</td>
                     <td class="player-name">
-                        <span class="player-color-dot" style="background-color: ${playerColor};"></span> ${p.name} ${p.id === state.myId ? '(Ty)' : ''}
+                        <span class="player-color-dot" style="background-color: ${playerColor};"></span> ${p.name}${teamLabel} ${p.id === state.myId ? '(Ty)' : ''}
                     </td>
                     <td>${territoryCount}</td>
                     <td>${p.score || 0}</td>
                  </tr>`;
     });
     rows += "</tbody></table>";
-    scorePanel.innerHTML = `<h3>Pořadí</h3>${rows}`;
+    let teamHeader = "";
+    if (state.mode === 'team' && Array.isArray(state.teams) && state.teams.length >= 2) {
+        teamHeader = `<div class='team-scores'><strong>${state.teams[0].name}: ${state.teams[0].score}</strong> vs <strong>${state.teams[1].name}: ${state.teams[1].score}</strong></div>`;
+    }
+    scorePanel.innerHTML = `<h3>Pořadí</h3>${teamHeader}${rows}`;
 }
 
 function setupMapInteraction() {
@@ -835,6 +858,9 @@ socket.on("state", (newState) => {
     state = { ...newState }; // Copy received state
     state.myId = myId;       // Restore my ID
     state.myName = myName;   // Restore my name
+    state.mode = newState.mode || state.mode;
+    state.teams = Array.isArray(newState.teams) ? newState.teams : state.teams;
+    state.timeRemaining = newState.timeRemaining ?? state.timeRemaining;
 
     // Ensure crucial arrays are arrays, provide defaults if missing
     state.players = Array.isArray(newState.players) ? newState.players : [];
@@ -1013,6 +1039,12 @@ socket.on("gameOver", ({ reason, players }) => {
     state.question = null; state.prepTime = 0; state.lastRevealedQuestion = null;
     hideModal(); // Ensure modal is hidden
     render(); // Re-render to potentially update panels and trigger overlay display
+});
+
+socket.on("time", ({ timeRemaining }) => {
+    state.timeRemaining = timeRemaining;
+    if (state.view === 'game') updateInfoPanel();
+});
 
 const ADJACENCY_CLIENT = {
     "PHA": ["STC"], "STC": ["PHA", "JHC", "PLK", "KVK", "ULK", "LBK", "HKK", "PAK", "VYS"], "JHC": ["STC", "PLK", "VYS", "JHM"], "PLK": ["STC", "JHC", "KVK", "ULK"], "KVK": ["STC", "PLK", "ULK"], "ULK": ["STC", "PLK", "KVK", "LBK"], "LBK": ["STC", "ULK", "HKK"], "HKK": ["STC", "LBK", "PAK", "OLK"], "PAK": ["STC", "HKK", "OLK", "VYS", "JHM"], "VYS": ["STC", "JHC", "PAK", "JHM", "ZLK", "OLK"], "JHM": ["JHC", "PAK", "VYS", "ZLK"], "ZLK": ["VYS", "JHM", "OLK", "MSK"], "OLK": ["HKK", "PAK", "VYS", "ZLK", "MSK"], "MSK": ["OLK", "ZLK"]
