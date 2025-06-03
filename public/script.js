@@ -1057,6 +1057,7 @@ socket.on("gameOver", ({ reason, players }) => {
     state.question = null; state.prepTime = 0; state.lastRevealedQuestion = null;
     hideModal(); // Ensure modal is hidden
     render(); // Re-render to potentially update panels and trigger overlay display
+});
 
 const ADJACENCY_CLIENT = {
     "PHA": ["STC"], "STC": ["PHA", "JHC", "PLK", "KVK", "ULK", "LBK", "HKK", "PAK", "VYS"], "JHC": ["STC", "PLK", "VYS", "JHM"], "PLK": ["STC", "JHC", "KVK", "ULK"], "KVK": ["STC", "PLK", "ULK"], "ULK": ["STC", "PLK", "KVK", "LBK"], "LBK": ["STC", "ULK", "HKK"], "HKK": ["STC", "LBK", "PAK", "OLK"], "PAK": ["STC", "HKK", "OLK", "VYS", "JHM"], "VYS": ["STC", "JHC", "PAK", "JHM", "ZLK", "OLK"], "JHM": ["JHC", "PAK", "VYS", "ZLK"], "ZLK": ["VYS", "JHM", "OLK", "MSK"], "OLK": ["HKK", "PAK", "VYS", "ZLK", "MSK"], "MSK": ["OLK", "ZLK"]
