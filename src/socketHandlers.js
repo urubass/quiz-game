@@ -3,6 +3,7 @@ module.exports = function registerSocketHandlers(io) {
 const path = require("path");
 const fs = require("fs");
 const { areAdjacent, serializeRoomState } = require("./utils");
+const { createBot, chooseRandomAnswer, chooseDraftPick, chooseAction } = require("../bots/simpleBot");
 
 /* === CONSTANTS ========================================================= */
 const PREP_TIME = 3; // Increased slightly
@@ -14,6 +15,10 @@ const DRAFT_WINNER_PICKS = 2;
 const DRAFT_OTHERS_PICKS = 1;
 const MAX_TURNS = 50;
 const FIRST_PICK_BONUS = 100; // Bonus score for first territory claimed in draft
+
+function botSocket(id) {
+    return { id, emit: () => {} };
+}
 
 // Region IDs
 const REGIONS = ["PHA", "STC", "JHC", "PLK", "KVK", "ULK", "LBK", "HKK", "PAK", "OLK", "MSK", "JHM", "ZLK", "VYS"];
@@ -66,11 +71,48 @@ function sanitizeQuestionForSpectator(q) {
     return sanitizeQuestion(q); // Currently same as normal sanitize
 }
 
+function scheduleBotAnswer(roomId, playerId) {
+    const room = rooms[roomId];
+    const bot = getPlayer(room, playerId);
+    if (!bot || !bot.isBot || !room.currentQuestion) return;
+    const ans = chooseRandomAnswer(room.currentQuestion);
+    setTimeout(() => {
+        if (rooms[roomId] && rooms[roomId].currentQuestion) {
+            handleAnswer(botSocket(bot.id), roomId, ans);
+        }
+    }, 500 + Math.random() * 500);
+}
+
+function scheduleBotDraftPick(roomId) {
+    const room = rooms[roomId];
+    const bot = getPlayer(room, room.activePlayerId);
+    if (!bot || !bot.isBot || room.phase !== 'draft') return;
+    const pick = chooseDraftPick(room, bot);
+    if (!pick) return advanceTurn(roomId, true);
+    setTimeout(() => {
+        handleDraftPick(botSocket(bot.id), roomId, pick);
+        if (rooms[roomId] && rooms[roomId].phase === 'draft' && rooms[roomId].activePlayerId === bot.id && rooms[roomId].draftData.picksRemainingForPlayer > 0) {
+            scheduleBotDraftPick(roomId);
+        }
+    }, 500);
+}
+
+function scheduleBotAction(roomId) {
+    const room = rooms[roomId];
+    const bot = getPlayer(room, room.activePlayerId);
+    if (!bot || !bot.isBot || room.phase !== 'turn-select-action') return;
+    const act = chooseAction(room, bot);
+    if (!act) return advanceTurn(roomId);
+    setTimeout(() => {
+        handleSelectAction(botSocket(bot.id), roomId, act.from, act.target);
+    }, 500);
+}
+
 /* === SOCKET LOGIC ====================================================== */
 io.on("connection", (socket) => {
     console.log(`Socket connected: ${socket.id}`);
 
-    socket.on("create", ({ name }, callback) => {
+    socket.on("create", ({ name, bots = 0 }, callback) => {
         // Input validation
         if (typeof name !== 'string' || name.trim().length === 0 || name.length > 20) {
             return callback({ error: "Neplatné jméno (max 20 znaků)." });
@@ -107,7 +149,15 @@ io.on("connection", (socket) => {
                 initialPlayerOrder: [] // Array of { id, name, initialOrder } - set on game start
             };
             socket.join(roomId);
-            console.log(`[${roomId}] Room created by ${hostPlayer.name} (${socket.id})`);
+
+            const numBots = Math.max(0, Math.min(parseInt(bots) || 0, MAX_PLAYERS - 1));
+            for (let i = 0; i < numBots; i++) {
+                const bot = createBot(`Bot${i + 1}`);
+                bot.initialOrder = rooms[roomId].players.length;
+                rooms[roomId].players.push(bot);
+            }
+
+            console.log(`[${roomId}] Room created by ${hostPlayer.name} (${socket.id}) with ${numBots} bots`);
             // Send back the necessary info
             callback({ roomId, players: rooms[roomId].players });
         } catch (error) {
@@ -535,6 +585,10 @@ function sendDraftOrderQuestion(roomId) {
             type: 'draft'
         });
 
+        room.players.forEach(p => {
+            if (p.isBot) scheduleBotAnswer(roomId, p.id);
+        });
+
         // Set timer for the answer phase
         room.questionTimer = setTimeout(() => {
             // Double-check phase again
@@ -659,6 +713,9 @@ function startDraftPhase(roomId) {
 
     // Send the new state to all clients
     io.to(roomId).emit("state", serializeRoomState(room));
+
+    const activePlayer = getPlayer(room, room.activePlayerId);
+    if (activePlayer?.isBot) scheduleBotDraftPick(roomId);
 }
 
 function handleDraftPick(socket, roomId, territoryId) {
@@ -723,6 +780,7 @@ function handleDraftPick(socket, roomId, territoryId) {
         room.lastResult += ` ${player.name} vybírá znovu.`;
         // Send state update to reflect the pick and remaining picks
         io.to(roomId).emit("state", serializeRoomState(room));
+        if (player.isBot) scheduleBotDraftPick(roomId);
     } else {
         // Move to the next player in the draft order
         setNextDraftPicker(roomId); // This function will handle state update and potentially end draft
@@ -775,6 +833,7 @@ function setNextDraftPicker(roomId) {
 
         // Send updated state to clients
         io.to(roomId).emit("state", serializeRoomState(room));
+        if (nextPlayer.isBot) scheduleBotDraftPick(roomId);
     }
 }
 
@@ -832,6 +891,8 @@ function startFirstTurn(roomId) {
 
     // Send the initial turn state
     io.to(roomId).emit("state", serializeRoomState(room));
+    const activeP = getPlayer(room, room.activePlayerId);
+    if (activeP?.isBot) scheduleBotAction(roomId);
 }
 
 function handleSelectAction(socket, roomId, fromTerritoryId, targetTerritoryId) {
@@ -928,6 +989,8 @@ function sendSinglePlayerQuestion(roomId, playerId, type) {
             type: type
         });
 
+        if (player.isBot) scheduleBotAnswer(roomId, player.id);
+
         // Set timer for the answer
         room.questionTimer = setTimeout(() => {
             if (rooms[roomId] && rooms[roomId].phase === `${type}-question`) {
@@ -971,6 +1034,9 @@ function sendDuelQuestion(roomId, attackerId, defenderId) {
             limit: ANSWER_TIME,
             type: 'duel'
         });
+
+        if (attacker.isBot) scheduleBotAnswer(roomId, attacker.id);
+        if (defender.isBot) scheduleBotAnswer(roomId, defender.id);
 
         // Set timer for the answer
         room.questionTimer = setTimeout(() => {
@@ -1359,6 +1425,8 @@ function advanceTurn(roomId, forced = false) {
     console.log(`[${roomId}] Advanced to Turn ${room.turnCounter}. Phase: ${room.phase}. Active: ${getPlayer(room, room.activePlayerId)?.name}`);
     // Send the updated state to all clients
     io.to(roomId).emit("state", serializeRoomState(room));
+    const active = getPlayer(room, room.activePlayerId);
+    if (active?.isBot) scheduleBotAction(roomId);
 }
 
 
