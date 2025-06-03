@@ -15,6 +15,7 @@ const DRAFT_WINNER_PICKS = 2;
 const DRAFT_OTHERS_PICKS = 1;
 const MAX_TURNS = 50;
 const FIRST_PICK_BONUS = 100; // Bonus score for first territory claimed in draft
+const TEAMS = ["red", "blue"]; // Two teams for team mode
 
 function botSocket(id) {
     return { id, emit: () => {} };
@@ -58,6 +59,31 @@ function generateRoomId() {
 function getPlayer(room, playerId) {
     if (!room || !Array.isArray(room.players)) return null;
     return room.players.find(p => p.id === playerId);
+}
+
+// Determine which team a new player should join (balance by count)
+function assignTeam(room) {
+    const counts = TEAMS.map(t => room.players.filter(p => p.team === t).length);
+    const min = Math.min(...counts);
+    return TEAMS[counts.indexOf(min)];
+}
+
+// Rotate through players of a team, skipping disconnected ones
+function getNextPlayerForTeam(room, team) {
+    const list = room.teamPlayers[team] || [];
+    if (list.length === 0) return null;
+    let idx = room.teamPlayerIndices[team] % list.length;
+    let checked = 0;
+    while (checked < list.length) {
+        const pid = list[idx];
+        if (getPlayer(room, pid)) {
+            room.teamPlayerIndices[team] = (idx + 1) % list.length;
+            return pid;
+        }
+        idx = (idx + 1) % list.length;
+        checked++;
+    }
+    return null;
 }
 
 // Helper to remove the 'correct' answer before sending to clients
@@ -126,7 +152,8 @@ io.on("connection", (socket) => {
                 score: 0,
                 ready: false, // Host isn't ready by default
                 territories: [],
-                initialOrder: 0 // Host is initially first in list
+                initialOrder: 0, // Host is initially first in list
+                team: TEAMS[0]
             };
             rooms[roomId] = {
                 id: roomId,
@@ -146,7 +173,11 @@ io.on("connection", (socket) => {
                 prepTimer: null, // Timeout IDs for clearing
                 questionTimer: null,
                 revealTimer: null,
-                initialPlayerOrder: [] // Array of { id, name, initialOrder } - set on game start
+                initialPlayerOrder: [], // Array of { id, name, initialOrder } - set on game start
+                teamPlayers: {},
+                teamPlayerIndices: {},
+                teamTurnIndex: 0,
+                activeTeam: null
             };
             socket.join(roomId);
 
@@ -154,6 +185,7 @@ io.on("connection", (socket) => {
             for (let i = 0; i < numBots; i++) {
                 const bot = createBot(`Bot${i + 1}`);
                 bot.initialOrder = rooms[roomId].players.length;
+                bot.team = assignTeam(rooms[roomId]);
                 rooms[roomId].players.push(bot);
             }
 
@@ -232,7 +264,8 @@ io.on("connection", (socket) => {
                 score: 0,
                 ready: false,
                 territories: [],
-                initialOrder: room.players.length // Order based on join sequence initially
+                initialOrder: room.players.length, // Order based on join sequence initially
+                team: assignTeam(room)
             };
             room.players.push(newPlayer);
             socket.join(roomId);
@@ -531,6 +564,15 @@ function initializeGame(roomId) {
         p.ready = false; // Reset ready status
         p.initialOrder = index; // Store the order *as they are now* before draft sorting
     });
+    // Build team player lists for turn rotation
+    room.teamPlayers = {};
+    room.teamPlayerIndices = {};
+    TEAMS.forEach(t => {
+        room.teamPlayers[t] = room.players.filter(p => p.team === t).map(p => p.id);
+        room.teamPlayerIndices[t] = 0;
+    });
+    room.teamTurnIndex = 0;
+    room.activeTeam = null;
     // Create the definitive initialPlayerOrder list based on current player order
     room.initialPlayerOrder = room.players.map(p => ({ id: p.id, name: p.name, initialOrder: p.initialOrder }));
     console.log(`[${roomId}] Initial player order (for turns): ${room.initialPlayerOrder.map(p=>p.name).join(', ')}`);
@@ -859,21 +901,22 @@ function startFirstTurn(roomId) {
     console.log(`[${roomId}] Starting first turn (Turn 1).`);
     room.phase = "turn-select-action"; // First phase of a turn
 
-    // Use the initialPlayerOrder determined *before* the draft question
-    room.turnIndex = 0; // Start with the first player in that order
-    room.activePlayerId = room.initialPlayerOrder[room.turnIndex]?.id;
+    room.teamTurnIndex = 0;
+    room.activeTeam = TEAMS[room.teamTurnIndex];
+    room.activePlayerId = getNextPlayerForTeam(room, room.activeTeam);
 
-    // Handle case where the first player in initial order might have disconnected
+    // Handle case where chosen player might have disconnected
     let safety = 0;
-    while (!getPlayer(room, room.activePlayerId) && safety < room.initialPlayerOrder.length) {
-        console.warn(`[${roomId}] Player ${room.activePlayerId} at turn index ${room.turnIndex} not found. Finding next.`);
-        room.turnIndex = (room.turnIndex + 1) % room.initialPlayerOrder.length;
-        room.activePlayerId = room.initialPlayerOrder[room.turnIndex]?.id;
+    while (!getPlayer(room, room.activePlayerId) && safety < TEAMS.length) {
+        console.warn(`[${roomId}] Player ${room.activePlayerId} not found. Choosing next team/player.`);
+        room.teamTurnIndex = (room.teamTurnIndex + 1) % TEAMS.length;
+        room.activeTeam = TEAMS[room.teamTurnIndex];
+        room.activePlayerId = getNextPlayerForTeam(room, room.activeTeam);
         safety++;
     }
 
     if (!getPlayer(room, room.activePlayerId)) {
-        console.error(`[${roomId}] FATAL: Could not find any valid starting player in initialPlayerOrder.`);
+        console.error(`[${roomId}] FATAL: Could not find any valid starting player for team turn.`);
         return endGame(roomId, "Chyba startu hry: Nelze určit prvního hráče na tahu.");
     }
 
@@ -887,7 +930,7 @@ function startFirstTurn(roomId) {
     clearRoomTimers(room); // Clear draft timers
 
     const activePlayerName = getPlayer(room, room.activePlayerId)?.name;
-    console.log(`[${roomId}] Turn 1 begins. Active player: ${activePlayerName} (Initial Order Index: ${room.turnIndex})`);
+    console.log(`[${roomId}] Turn 1 begins. Team: ${room.activeTeam}, Player: ${activePlayerName}`);
 
     // Send the initial turn state
     io.to(roomId).emit("state", serializeRoomState(room));
@@ -1361,58 +1404,23 @@ function advanceTurn(roomId, forced = false) {
         return endGame(roomId, `Dosaženo maximálního počtu kol (${MAX_TURNS}).`);
     }
 
-    // Ensure initialPlayerOrder exists and is populated
-    if (!room.initialPlayerOrder || room.initialPlayerOrder.length === 0) {
-        if (room.players.length >= MIN_PLAYERS) {
-            console.warn(`[${roomId}] initialPlayerOrder missing. Rebuilding from current players.`);
-            room.initialPlayerOrder = room.players.map((p, idx)=>({id: p.id, name: p.name, initialOrder: idx}));
-            room.turnIndex = 0; // Reset index
-        } else {
-            console.error(`[${roomId}] Cannot advance turn: initialPlayerOrder is empty and not enough players.`);
-            return endGame(roomId, "Chyba: Nelze určit dalšího hráče na tahu.");
-        }
+    // Determine next team and player
+    room.teamTurnIndex = (room.teamTurnIndex + 1) % TEAMS.length;
+    room.activeTeam = TEAMS[room.teamTurnIndex];
+    room.activePlayerId = getNextPlayerForTeam(room, room.activeTeam);
+
+    // If no player found for this team, try the other team
+    let attempts = 0;
+    while (!room.activePlayerId && attempts < TEAMS.length) {
+        room.teamTurnIndex = (room.teamTurnIndex + 1) % TEAMS.length;
+        room.activeTeam = TEAMS[room.teamTurnIndex];
+        room.activePlayerId = getNextPlayerForTeam(room, room.activeTeam);
+        attempts++;
     }
 
-    const numPlayersInOrder = room.initialPlayerOrder.length;
-    if (numPlayersInOrder === 0) {
-        console.log(`[${roomId}] No players left in initial order. Ending game.`);
+    if (!room.activePlayerId) {
+        console.log(`[${roomId}] No players remaining to take a turn.`);
         return endGame(roomId, "Všichni hráči opustili hru.");
-    }
-
-
-    // Find the *next* player in the initial order who is still *currently* in the game
-    let nextPlayerFound = false;
-    let safetyCounter = 0; // Prevent infinite loop
-    let nextTurnIndex = room.turnIndex; // Start searching from the current index
-
-    do {
-        nextTurnIndex = (nextTurnIndex + 1) % numPlayersInOrder; // Move to next index (wraps around)
-        const nextPlayerInfo = room.initialPlayerOrder[nextTurnIndex];
-
-        if (nextPlayerInfo && getPlayer(room, nextPlayerInfo.id)) {
-            // Found the next player who is still in the room.players list
-            room.activePlayerId = nextPlayerInfo.id;
-            room.turnIndex = nextTurnIndex; // Update the room's turn index
-            nextPlayerFound = true;
-            console.log(`[${roomId}] Next active player found: ${nextPlayerInfo.name} (Initial Index: ${room.turnIndex})`);
-        } else if (nextPlayerInfo) {
-            // Player in initial order is no longer in the game, skip
-            console.log(`[${roomId}] Skipping player ${nextPlayerInfo.name} (ID: ${nextPlayerInfo.id}) at index ${nextTurnIndex} (disconnected).`);
-        }
-        safetyCounter++;
-    } while (!nextPlayerFound && safetyCounter <= numPlayersInOrder); // Loop until found or checked all
-
-    if (!nextPlayerFound) {
-        // This should only happen if all players in initialPlayerOrder are no longer in room.players
-        console.error(`[${roomId}] FATAL: Could not find any valid next active player among remaining players.`);
-        if (room.players.length > 0) {
-            // Fallback: just pick the first player from the current list? Unreliable order.
-            room.activePlayerId = room.players[0].id;
-            room.turnIndex = room.initialPlayerOrder.findIndex(p=>p?.id === room.activePlayerId) ?? 0; // Try to find index, fallback 0
-            console.warn(`[${roomId}] Fallback: Setting active player to ${room.players[0].name}`);
-        } else {
-            return endGame(roomId, "Chyba: Nelze najít dalšího hráče na tahu (žádní hráči nezbyli?).");
-        }
     }
 
     // Set up state for the new turn
@@ -1432,60 +1440,38 @@ function advanceTurn(roomId, forced = false) {
 
 function checkForVictory(roomId) {
     const room = rooms[roomId];
-    // Don't check for victory during initial phases or if game ended
     if (!room || !room.territories || room.players.length < 1 || ['lobby', 'initializing', 'draft-order-question', 'draft-order-evaluating', 'draft', 'finished'].includes(room.phase)) {
-        return false; // Not applicable state
+        return false;
     }
 
     const totalTerritories = room.territories.length;
-    if (totalTerritories === 0) return false; // No territories to win yet
+    if (totalTerritories === 0) return false;
 
-    let conqueror = null;
-    let playersWithTerritories = 0;
-    let lastPlayerWithTerritory = null;
-
-    for (const player of room.players) {
-        const pTerritoryCount = Array.isArray(player.territories) ? player.territories.length : 0;
-
-        // Check for total conquest
-        if (pTerritoryCount === totalTerritories) {
-            conqueror = player;
-            break; // Found a conqueror
-        }
-
-        // Track players who still own land
-        if (pTerritoryCount > 0) {
-            playersWithTerritories++;
-            lastPlayerWithTerritory = player;
+    const teamCounts = {};
+    for (const terr of room.territories) {
+        if (terr.owner) {
+            const owner = getPlayer(room, terr.owner);
+            if (owner && owner.team) {
+                teamCounts[owner.team] = (teamCounts[owner.team] || 0) + 1;
+            }
         }
     }
 
-    // Condition 1: Total Conquest
-    if (conqueror) {
-        console.log(`[${roomId}] Victory Condition Met: ${conqueror.name} conquered all territories.`);
-        endGame(roomId, `${conqueror.name} dobyl celé Česko!`);
+    for (const t of TEAMS) {
+        if (teamCounts[t] === totalTerritories) {
+            endGame(roomId, `Tým ${t} ovládl celé území!`);
+            return true;
+        }
+    }
+
+    const teamsWithLand = TEAMS.filter(t => (teamCounts[t] || 0) > 0);
+    if (teamsWithLand.length === 1 && room.turnCounter > 0) {
+        const winningTeam = teamsWithLand[0];
+        endGame(roomId, `Tým ${winningTeam} zůstal jako jediný.`);
         return true;
     }
 
-    // Condition 2: Last Player Standing (with territories) - requires MIN_PLAYERS > 1
-    // Only trigger if more than one player started (implied by MIN_PLAYERS)
-    // And only if the game has progressed beyond the initial turns (e.g., turnCounter > 0 or phase isn't draft)
-    if (MIN_PLAYERS > 1 && room.players.length >= 1 && playersWithTerritories === 1 && room.turnCounter > 0) {
-        console.log(`[${roomId}] Victory Condition Met: ${lastPlayerWithTerritory.name} is the last player with territories.`);
-        endGame(roomId, `${lastPlayerWithTerritory.name} zůstal jako poslední vládce území!`);
-        return true;
-    }
-
-    // Condition 3: Only one player left in the game (others disconnected) - requires MIN_PLAYERS > 1
-    if (MIN_PLAYERS > 1 && room.players.length === 1 && room.turnCounter > 0) { // Ensure game actually started
-        const solePlayer = room.players[0];
-        console.log(`[${roomId}] Victory Condition Met: ${solePlayer.name} is the only player left.`);
-        endGame(roomId, `${solePlayer.name} vyhrál, protože ostatní hráči opustili hru.`);
-        return true;
-    }
-
-
-    return false; // No victory condition met
+    return false;
 }
 
 function endGame(roomId, reason) {

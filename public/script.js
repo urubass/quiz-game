@@ -5,6 +5,9 @@ const app = $("#app");
 const modal = $("#question-modal");
 
 const PLAYER_COLORS = ["#ef4444", "#3b82f6", "#10b981", "#f59e0b", "#8b5cf6", "#ec4899"];
+const TEAMS = ["red", "blue"];
+const TEAM_NAMES = { red: "Červení", blue: "Modří" };
+const TEAM_COLORS = { red: "#ef4444", blue: "#3b82f6" };
 
 // --- MAP LOADING ---
 // Declare the promise variable globally
@@ -123,8 +126,9 @@ function updatePlayerList() {
         const colorIndex = initialPlayerData?.initialOrder !== undefined ? initialPlayerData.initialOrder : index;
         const playerColor = PLAYER_COLORS[colorIndex % PLAYER_COLORS.length] || '#888'; // Ensure fallback color
 
+        const teamName = TEAM_NAMES[p.team] || p.team;
         li.innerHTML = `
-            <span><span class="player-color-dot" style="background-color: ${playerColor};"></span> ${p.name} ${isMe ? '(Ty)' : ''} ${index === 0 ? '👑' : ''}</span>
+            <span><span class="player-color-dot" style="background-color: ${playerColor};"></span> ${p.name} (${teamName}) ${isMe ? '(Ty)' : ''} ${index === 0 ? '👑' : ''}</span>
             ${p.ready ? '<span class="ready-status">✔ Připraven</span>' : '<span>⏳ Čeká...</span>'}
         `;
         ul.appendChild(li); if (!p.ready) allReady = false;
@@ -648,6 +652,14 @@ function updateScorePanel() {
     const players = Array.isArray(state.players) ? state.players : [];
     const initialOrderMap = new Map(state.initialPlayerOrder?.map(p => [p.id, p.initialOrder]));
 
+    const teamStats = {};
+    players.forEach(p => {
+        const team = p.team;
+        if (!teamStats[team]) teamStats[team] = { score:0, territories:0 };
+        teamStats[team].score += p.score || 0;
+        teamStats[team].territories += Array.isArray(p.territories) ? p.territories.length : 0;
+    });
+
     // Sort players primarily by score (desc), secondarily by territory count (desc)
     const sortedPlayers = [...players].sort((a, b) => {
         const scoreDiff = (b.score || 0) - (a.score || 0);
@@ -656,6 +668,13 @@ function updateScorePanel() {
         const terrB = Array.isArray(b.territories) ? b.territories.length : 0;
         return terrB - terrA;
     });
+
+    let teamRows = `<table class='table'><thead><tr><th>Tým</th><th>Kraje</th><th>Body</th></tr></thead><tbody>`;
+    TEAMS.forEach(t => {
+        const stats = teamStats[t] || {score:0, territories:0};
+        teamRows += `<tr><td><span class="team-color-dot" style="background-color:${TEAM_COLORS[t]};"></span> ${TEAM_NAMES[t]}</td><td>${stats.territories}</td><td>${stats.score}</td></tr>`;
+    });
+    teamRows += "</tbody></table>";
 
     let rows = `<table class='table'><thead><tr><th>#</th><th>Hráč</th><th>Kraje</th><th>Body</th></tr></thead><tbody>`;
     sortedPlayers.forEach((p, index) => {
@@ -675,7 +694,7 @@ function updateScorePanel() {
                  </tr>`;
     });
     rows += "</tbody></table>";
-    scorePanel.innerHTML = `<h3>Pořadí</h3>${rows}`;
+    scorePanel.innerHTML = `<h3>Skóre týmů</h3>${teamRows}<h3>Hráči</h3>${rows}`;
 }
 
 function setupMapInteraction() {
