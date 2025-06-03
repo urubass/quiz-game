@@ -24,6 +24,11 @@ A real-time online quiz game for 1–6 players. Run the server locally to play w
 
 The server will be available on `http://localhost:3000` by default.
 
+When creating a game you can optionally specify question categories
+as a comma separated list. Only questions matching those categories
+will be used for the game. If no categories are provided, all
+questions are eligible.
+
 ## Testing
 
 Run the test suite with:

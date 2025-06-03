@@ -42,7 +42,7 @@ let state = {
     view: "home", roomId: "", myId: "", myName: "", players: [], initialPlayerOrder: [],
     territories: [], phase: "lobby", turnIndex: 0, myTurn: false, activePlayerId: null,
     question: null, prepTime: 0, lastResult: null, turnCounter: 0, turnData: null,
-    lastRevealedQuestion: null,
+    lastRevealedQuestion: null, categories: [],
 };
 
 let questionTimerInterval = null;
@@ -69,6 +69,7 @@ function renderHome() {
             <h1>Dobyvatel ČR</h1>
             <input id="name" class="input" placeholder="Tvé jméno" value="${state.myName || ''}" />
             <input id="bots" class="input" type="number" min="0" max="5" value="0" placeholder="Počet botů" />
+            <input id="categories" class="input" placeholder="Kategorie (oddělené čárkou)" />
             <button id="create">Vytvořit hru</button>
             <input id="code" class="input" placeholder="Kód místnosti (6 znaků)" />
             <button id="join" class="secondary">Připojit se ke hře</button>
@@ -77,7 +78,9 @@ function renderHome() {
     $("#create").onclick = () => {
         const name = $("#name").value.trim(); if (!name) { $("#home-error").textContent = "Zadejte prosím jméno."; return; }
         const bots = parseInt($("#bots").value, 10) || 0;
-        $("#home-error").textContent = ""; state.myName = name; socket.emit("create", { name, bots }, handleRoomResponse);
+        const categoriesInput = $("#categories").value.trim();
+        const categories = categoriesInput ? categoriesInput.split(',').map(c => c.trim()).filter(c => c) : [];
+        $("#home-error").textContent = ""; state.myName = name; socket.emit("create", { name, bots, categories }, handleRoomResponse);
     };
     $("#join").onclick = () => {
         const name = $("#name").value.trim(); const code = $("#code").value.trim().toUpperCase(); if (!name || !code || code.length !== 6) { $("#home-error").textContent = "Zadejte jméno a platný 6místný kód."; return; }
@@ -91,7 +94,7 @@ function handleRoomResponse(res) {
         const errorEl = $("#home-error"); if(errorEl) errorEl.textContent = "Chyba: " + res.error;
     } else {
         console.log("Room created/joined successfully:", res);
-        state.roomId = res.roomId; state.myId = socket.id; state.players = res.players; state.view = "lobby";
+        state.roomId = res.roomId; state.myId = socket.id; state.players = res.players; state.categories = res.categories || []; state.view = "lobby";
         render();
     }
 }
@@ -102,6 +105,7 @@ function renderLobby() {
         <div id="lobby-card" class="card">
             <h2>Místnost: ${state.roomId}</h2>
             <p>Sdílej kód s přáteli. Hra je pro ${minPlayers}-6 hráčů.</p>
+            <p>Kategorie: ${state.categories.join(', ') || 'vše'}</p>
             <h3>Hráči:</h3>
             <ul id="player-list"></ul>
             <button id="ready">Jsem připraven</button>
