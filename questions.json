@@ -1,937 +1,2246 @@
 [
   {
     "text": "Která řeka protéká hlavním městem Prahou?",
-    "choices": ["Labe", "Morava", "Vltava", "Odra"],
-    "correct": 2
+    "choices": [
+      "Labe",
+      "Morava",
+      "Vltava",
+      "Odra"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se jmenuje nejvyšší hora České republiky?",
-    "choices": ["Praděd", "Lysá hora", "Sněžka", "Klíč"],
-    "correct": 2
+    "choices": [
+      "Praděd",
+      "Lysá hora",
+      "Sněžka",
+      "Klíč"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Ve kterém roce vznikla samostatná Česká republika?",
-    "choices": ["1989", "1991", "1993", "1995"],
-    "correct": 2
+    "choices": [
+      "1989",
+      "1991",
+      "1993",
+      "1995"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Kdo byl prvním prezidentem Československa?",
-    "choices": ["Václav Havel", "Edvard Beneš", "Antonín Zápotocký", "Tomáš Garrigue Masaryk"],
-    "correct": 3
+    "choices": [
+      "Václav Havel",
+      "Edvard Beneš",
+      "Antonín Zápotocký",
+      "Tomáš Garrigue Masaryk"
+    ],
+    "correct": 3,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Který slavný hudební skladatel se narodil v Litomyšli?",
-    "choices": ["Antonín Dvořák", "Bedřich Smetana", "Leoš Janáček", "Bohuslav Martinů"],
-    "correct": 1
+    "choices": [
+      "Antonín Dvořák",
+      "Bedřich Smetana",
+      "Leoš Janáček",
+      "Bohuslav Martinů"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jaké tradiční jídlo se často podává se svíčkovou omáčkou?",
-    "choices": ["Bramboráky", "Knedlíky", "Rýže", "Hranolky"],
-    "correct": 1
+    "choices": [
+      "Bramboráky",
+      "Knedlíky",
+      "Rýže",
+      "Hranolky"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Které české město je známé výrobou piva Pilsner Urquell?",
-    "choices": ["Praha", "Brno", "Ostrava", "Plzeň"],
-    "correct": 3
+    "choices": [
+      "Praha",
+      "Brno",
+      "Ostrava",
+      "Plzeň"
+    ],
+    "correct": 3,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jaký hrad založil Karel IV. pro uložení korunovačních klenotů?",
-    "choices": ["Pražský hrad", "Karlštejn", "Křivoklát", "Loket"],
-    "correct": 1
+    "choices": [
+      "Pražský hrad",
+      "Karlštejn",
+      "Křivoklát",
+      "Loket"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Který vynález je spojen se jménem Prokop Diviš?",
-    "choices": ["Knihtisk", "Bleskosvod", "Parní stroj", "Telefon"],
-    "correct": 1
+    "choices": [
+      "Knihtisk",
+      "Bleskosvod",
+      "Parní stroj",
+      "Telefon"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se jmenuje český filmový režisér oceněný Oscarem za film Amadeus?",
-    "choices": ["Jiří Menzel", "Věra Chytilová", "Jan Svěrák", "Miloš Forman"],
-    "correct": 3
+    "choices": [
+      "Jiří Menzel",
+      "Věra Chytilová",
+      "Jan Svěrák",
+      "Miloš Forman"
+    ],
+    "correct": 3,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Které pohoří tvoří přirozenou hranici s Polskem na severu Čech?",
-    "choices": ["Šumava", "Krkonoše", "Jeseníky", "Beskydy"],
-    "correct": 1
+    "choices": [
+      "Šumava",
+      "Krkonoše",
+      "Jeseníky",
+      "Beskydy"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jaký panovník vládl v době 'rudolfinské Prahy'?",
-    "choices": ["Karel IV.", "Jiří z Poděbrad", "Rudolf II.", "Ferdinand I."],
-    "correct": 2
+    "choices": [
+      "Karel IV.",
+      "Jiří z Poděbrad",
+      "Rudolf II.",
+      "Ferdinand I."
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Který český spisovatel je autorem 'Saturnina'?",
-    "choices": ["Karel Čapek", "Jaroslav Hašek", "Zdeněk Jirotka", "Vladislav Vančura"],
-    "correct": 2
+    "choices": [
+      "Karel Čapek",
+      "Jaroslav Hašek",
+      "Zdeněk Jirotka",
+      "Vladislav Vančura"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se nazývá největší rybník v České republice?",
-    "choices": ["Máchovo jezero", "Svět", "Bezdrev", "Rožmberk"],
-    "correct": 3
+    "choices": [
+      "Máchovo jezero",
+      "Svět",
+      "Bezdrev",
+      "Rožmberk"
+    ],
+    "correct": 3,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Který sportovec získal pro Česko zlatou olympijskou medaili v desetiboji?",
-    "choices": ["Jan Železný", "Roman Šebrle", "Jaromír Jágr", "Emil Zátopek"],
-    "correct": 1
+    "choices": [
+      "Jan Železný",
+      "Roman Šebrle",
+      "Jaromír Jágr",
+      "Emil Zátopek"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jaké ovoce je typické pro oblast jižní Moravy?",
-    "choices": ["Jablka", "Hrušky", "Meruňky a vinná réva", "Švestky"],
-    "correct": 2
+    "choices": [
+      "Jablka",
+      "Hrušky",
+      "Meruňky a vinná réva",
+      "Švestky"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Který český panovník je známý jako 'Otec vlasti'?",
-    "choices": ["Přemysl Otakar II.", "Václav I.", "Jan Lucemburský", "Karel IV."],
-    "correct": 3
+    "choices": [
+      "Přemysl Otakar II.",
+      "Václav I.",
+      "Jan Lucemburský",
+      "Karel IV."
+    ],
+    "correct": 3,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se jmenuje slavný animovaný krtek, jehož autorem je Zdeněk Miler?",
-    "choices": ["Ferda Mravenec", "Krtek", "Maxipes Fík", "Rákosníček"],
-    "correct": 1
+    "choices": [
+      "Ferda Mravenec",
+      "Krtek",
+      "Maxipes Fík",
+      "Rákosníček"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Které lázeňské město je známé svými kolonádami a léčivými prameny?",
-    "choices": ["Karlovy Vary", "Mariánské Lázně", "Františkovy Lázně", "Všechny uvedené"],
-    "correct": 3
+    "choices": [
+      "Karlovy Vary",
+      "Mariánské Lázně",
+      "Františkovy Lázně",
+      "Všechny uvedené"
+    ],
+    "correct": 3,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Který český chemik získal Nobelovu cenu za objev polarografie?",
-    "choices": ["Otto Wichterle", "Antonín Holý", "Jaroslav Heyrovský", "Vladimír Prelog"],
-    "correct": 2
+    "choices": [
+      "Otto Wichterle",
+      "Antonín Holý",
+      "Jaroslav Heyrovský",
+      "Vladimír Prelog"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jaký typ piva je typický pro České Budějovice?",
-    "choices": ["Ležák (Budvar/Budweiser)", "Tmavé pivo", "Pšeničné pivo", "Ale"],
-    "correct": 0
+    "choices": [
+      "Ležák (Budvar/Budweiser)",
+      "Tmavé pivo",
+      "Pšeničné pivo",
+      "Ale"
+    ],
+    "correct": 0,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Která bitva v roce 1620 znamenala porážku českých stavů?",
-    "choices": ["Bitva u Lipan", "Bitva na Vítkově", "Bitva na Bílé hoře", "Bitva u Sudoměře"],
-    "correct": 2
+    "choices": [
+      "Bitva u Lipan",
+      "Bitva na Vítkově",
+      "Bitva na Bílé hoře",
+      "Bitva u Sudoměře"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Kdo je autorem knihy 'Babička'?",
-    "choices": ["Karolina Světlá", "Božena Němcová", "Eliška Krásnohorská", "Alois Jirásek"],
-    "correct": 1
+    "choices": [
+      "Karolina Světlá",
+      "Božena Němcová",
+      "Eliška Krásnohorská",
+      "Alois Jirásek"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se nazývá známá propast v Moravském krasu?",
-    "choices": ["Peklo", "Macocha", "Hranická propast", "Bozkovská jeskyně"],
-    "correct": 1
+    "choices": [
+      "Peklo",
+      "Macocha",
+      "Hranická propast",
+      "Bozkovská jeskyně"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Která česká tenistka vyhrála Wimbledon vícekrát?",
-    "choices": ["Jana Novotná", "Helena Suková", "Petra Kvitová", "Martina Navrátilová"],
-    "correct": 3
+    "choices": [
+      "Jana Novotná",
+      "Helena Suková",
+      "Petra Kvitová",
+      "Martina Navrátilová"
+    ],
+    "correct": 3,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se jmenuje tradiční česká vánoční ryba?",
-    "choices": ["Štika", "Candát", "Kapr", "Sumec"],
-    "correct": 2
+    "choices": [
+      "Štika",
+      "Candát",
+      "Kapr",
+      "Sumec"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Které město je centrem Valašska?",
-    "choices": ["Zlín", "Vsetín", "Uherské Hradiště", "Rožnov pod Radhoštěm"],
-    "correct": 1
+    "choices": [
+      "Zlín",
+      "Vsetín",
+      "Uherské Hradiště",
+      "Rožnov pod Radhoštěm"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Kdo byl mistr popravený v Kostnici v roce 1415?",
-    "choices": ["Jan Žižka", "Jeronym Pražský", "Jan Hus", "Petr Chelčický"],
-    "correct": 2
+    "choices": [
+      "Jan Žižka",
+      "Jeronym Pražský",
+      "Jan Hus",
+      "Petr Chelčický"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se jmenuje postava vojáka z románu Jaroslava Haška?",
-    "choices": ["Voják Kefalín", "Voják Švejk", "Voják Baloun", "Voják Vaněk"],
-    "correct": 1
+    "choices": [
+      "Voják Kefalín",
+      "Voják Švejk",
+      "Voják Baloun",
+      "Voják Vaněk"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Která chráněná krajinná oblast je známá svými pískovcovými skalami?",
-    "choices": ["Český ráj", "Broumovsko", "České Švýcarsko", "Všechny uvedené"],
-    "correct": 3
+    "choices": [
+      "Český ráj",
+      "Broumovsko",
+      "České Švýcarsko",
+      "Všechny uvedené"
+    ],
+    "correct": 3,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se jmenuje český hokejový brankář, který získal zlatou medaili v Naganu?",
-    "choices": ["Roman Čechmánek", "Tomáš Vokoun", "Milan Hnilička", "Dominik Hašek"],
-    "correct": 3
+    "choices": [
+      "Roman Čechmánek",
+      "Tomáš Vokoun",
+      "Milan Hnilička",
+      "Dominik Hašek"
+    ],
+    "correct": 3,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jaká sladkost je typická pro Pardubice?",
-    "choices": ["Hořické trubičky", "Lázeňské oplatky", "Perník", "Štramberské uši"],
-    "correct": 2
+    "choices": [
+      "Hořické trubičky",
+      "Lázeňské oplatky",
+      "Perník",
+      "Štramberské uši"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Které město bylo hlavním městem Velkomoravské říše?",
-    "choices": ["Praha", "Olomouc", "Mikulčice/Staré Město", "Nitra"],
-    "correct": 2
+    "choices": [
+      "Praha",
+      "Olomouc",
+      "Mikulčice/Staré Město",
+      "Nitra"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Kdo napsal hru 'R.U.R.', kde se poprvé objevilo slovo 'robot'?",
-    "choices": ["Václav Havel", "Josef Čapek", "Karel Čapek", "František Langer"],
-    "correct": 2
+    "choices": [
+      "Václav Havel",
+      "Josef Čapek",
+      "Karel Čapek",
+      "František Langer"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se jmenuje nejdelší řeka pramenící na území České republiky?",
-    "choices": ["Vltava", "Labe", "Morava", "Ohře"],
-    "correct": 0
+    "choices": [
+      "Vltava",
+      "Labe",
+      "Morava",
+      "Ohře"
+    ],
+    "correct": 0,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Který český fotbalista získal Zlatý míč pro nejlepšího fotbalistu Evropy?",
-    "choices": ["Petr Čech", "Antonín Panenka", "Pavel Nedvěd", "Josef Masopust"],
-    "correct": 2
+    "choices": [
+      "Petr Čech",
+      "Antonín Panenka",
+      "Pavel Nedvěd",
+      "Josef Masopust"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jaký alkoholický nápoj je specialitou Karlových Varů?",
-    "choices": ["Slivovice", "Becherovka", "Fernet", "Griotte"],
-    "correct": 1
+    "choices": [
+      "Slivovice",
+      "Becherovka",
+      "Fernet",
+      "Griotte"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Který panovník vydal Zlatou bulu sicilskou?",
-    "choices": ["Karel IV.", "Václav II.", "Přemysl Otakar I.", "Jan Lucemburský"],
-    "correct": 2
+    "choices": [
+      "Karel IV.",
+      "Václav II.",
+      "Přemysl Otakar I.",
+      "Jan Lucemburský"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se jmenuje slavná postava z večerníčků, která nosí rádiovku?",
-    "choices": ["Večerníček", "Mach", "Šebestová", "Křemílek"],
-    "correct": 0
+    "choices": [
+      "Večerníček",
+      "Mach",
+      "Šebestová",
+      "Křemílek"
+    ],
+    "correct": 0,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Které pohoří se nachází na jihozápadní hranici Česka s Německem a Rakouskem?",
-    "choices": ["Krušné hory", "Jizerské hory", "Orlické hory", "Šumava"],
-    "correct": 3
+    "choices": [
+      "Krušné hory",
+      "Jizerské hory",
+      "Orlické hory",
+      "Šumava"
+    ],
+    "correct": 3,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Která česká rychlobruslařka získala několik zlatých olympijských medailí?",
-    "choices": ["Kateřina Neumannová", "Gabriela Soukalová", "Martina Sáblíková", "Eva Samková"],
-    "correct": 2
+    "choices": [
+      "Kateřina Neumannová",
+      "Gabriela Soukalová",
+      "Martina Sáblíková",
+      "Eva Samková"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se nazývá tradiční velikonoční pečivo ve tvaru beránka?",
-    "choices": ["Mazanec", "Jidáše", "Velikonoční beránek", "Trdelník"],
-    "correct": 2
+    "choices": [
+      "Mazanec",
+      "Jidáše",
+      "Velikonoční beránek",
+      "Trdelník"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Které město je proslulé výrobou skla a bižuterie?",
-    "choices": ["Liberec", "Jablonec nad Nisou", "Nový Bor", "Všechny uvedené"],
-    "correct": 3
+    "choices": [
+      "Liberec",
+      "Jablonec nad Nisou",
+      "Nový Bor",
+      "Všechny uvedené"
+    ],
+    "correct": 3,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Který český král padl v bitvě u Kresčaku?",
-    "choices": ["Přemysl Otakar II.", "Jan Lucemburský", "Václav III.", "Jiří z Poděbrad"],
-    "correct": 1
+    "choices": [
+      "Přemysl Otakar II.",
+      "Jan Lucemburský",
+      "Václav III.",
+      "Jiří z Poděbrad"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Kdo je autorem opery 'Prodaná nevěsta'?",
-    "choices": ["Antonín Dvořák", "Leoš Janáček", "Bedřich Smetana", "Zdeněk Fibich"],
-    "correct": 2
+    "choices": [
+      "Antonín Dvořák",
+      "Leoš Janáček",
+      "Bedřich Smetana",
+      "Zdeněk Fibich"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jaký národní park se nachází na hranici s Rakouskem a je známý vřesovišti?",
-    "choices": ["NP Šumava", "NP České Švýcarsko", "NP Podyjí", "KRNAP"],
-    "correct": 2
+    "choices": [
+      "NP Šumava",
+      "NP České Švýcarsko",
+      "NP Podyjí",
+      "KRNAP"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Která česká atletka drží světový rekord v hodu oštěpem?",
-    "choices": ["Dana Zátopková", "Barbora Špotáková", "Nikola Ogrodníková", "Věra Čáslavská"],
-    "correct": 1
+    "choices": [
+      "Dana Zátopková",
+      "Barbora Špotáková",
+      "Nikola Ogrodníková",
+      "Věra Čáslavská"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se nazývá sladké pečivo, které se tradičně peče na svatého Martina?",
-    "choices": ["Martinské rohlíky/podkovy", "Koláče", "Vánočka", "Buchty"],
-    "correct": 0
+    "choices": [
+      "Martinské rohlíky/podkovy",
+      "Koláče",
+      "Vánočka",
+      "Buchty"
+    ],
+    "correct": 0,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Které město je sídlem Ústavního soudu České republiky?",
-    "choices": ["Praha", "Olomouc", "Plzeň", "Brno"],
-    "correct": 3
+    "choices": [
+      "Praha",
+      "Olomouc",
+      "Plzeň",
+      "Brno"
+    ],
+    "correct": 3,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Který panovník byl znám jako 'král železný a zlatý'?",
-    "choices": ["Václav I.", "Přemysl Otakar II.", "Karel IV.", "Václav IV."],
-    "correct": 1
+    "choices": [
+      "Václav I.",
+      "Přemysl Otakar II.",
+      "Karel IV.",
+      "Václav IV."
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se jmenuje hlavní postava z knihy 'Malý princ'?",
-    "choices": ["Princ Bajaja", "Malý princ", "Princ Jasoň", "Princ Krasoň"],
-    "correct": 1
+    "choices": [
+      "Princ Bajaja",
+      "Malý princ",
+      "Princ Jasoň",
+      "Princ Krasoň"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Která vodní nádrž je největší podle rozlohy v ČR?",
-    "choices": ["Orlík", "Slapy", "Nové Mlýny", "Lipno"],
-    "correct": 3
+    "choices": [
+      "Orlík",
+      "Slapy",
+      "Nové Mlýny",
+      "Lipno"
+    ],
+    "correct": 3,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se jmenuje slavný český cestovatel známý svými cestami po Africe a Jižní Americe?",
-    "choices": ["Emil Holub", "Enrique Stanko Vráz", "Miroslav Zikmund", "Jiří Hanzelka"],
-    "correct": 2
+    "choices": [
+      "Emil Holub",
+      "Enrique Stanko Vráz",
+      "Miroslav Zikmund",
+      "Jiří Hanzelka"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jaký typ sýra je specialitou Olomouce?",
-    "choices": ["Hermelín", "Niva", "Olomoucké tvarůžky", "Blaťácké zlato"],
-    "correct": 2
+    "choices": [
+      "Hermelín",
+      "Niva",
+      "Olomoucké tvarůžky",
+      "Blaťácké zlato"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Který český reformátor a diplomat byl znám jako 'husitský král'?",
-    "choices": ["Jan Žižka", "Prokop Holý", "Jiří z Poděbrad", "Petr Chelčický"],
-    "correct": 2
+    "choices": [
+      "Jan Žižka",
+      "Prokop Holý",
+      "Jiří z Poděbrad",
+      "Petr Chelčický"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Kdo napsal 'Osudy dobrého vojáka Švejka za světové války'?",
-    "choices": ["Karel Poláček", "Ivan Olbracht", "Jaroslav Hašek", "Eduard Bass"],
-    "correct": 2
+    "choices": [
+      "Karel Poláček",
+      "Ivan Olbracht",
+      "Jaroslav Hašek",
+      "Eduard Bass"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se nazývá komplex barokních zahrad a zámku zapsaný na seznamu UNESCO?",
-    "choices": ["Lednicko-valtický areál", "Český Krumlov", "Kroměříž", "Telč"],
-    "correct": 0
+    "choices": [
+      "Lednicko-valtický areál",
+      "Český Krumlov",
+      "Kroměříž",
+      "Telč"
+    ],
+    "correct": 0,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Který český běžec získal na jedné olympiádě (1952) tři zlaté medaile?",
-    "choices": ["Jan Železný", "Jarmila Kratochvílová", "Emil Zátopek", "Roman Šebrle"],
-    "correct": 2
+    "choices": [
+      "Jan Železný",
+      "Jarmila Kratochvílová",
+      "Emil Zátopek",
+      "Roman Šebrle"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jaká polévka je tradiční součástí štědrovečerní večeře?",
-    "choices": ["Hovězí vývar", "Česnečka", "Rybí polévka", "Kulajda"],
-    "correct": 2
+    "choices": [
+      "Hovězí vývar",
+      "Česnečka",
+      "Rybí polévka",
+      "Kulajda"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Které město je známé bitvou tří císařů (1805)?",
-    "choices": ["Brno", "Znojmo", "Slavkov u Brna", "Vyškov"],
-    "correct": 2
+    "choices": [
+      "Brno",
+      "Znojmo",
+      "Slavkov u Brna",
+      "Vyškov"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Která žena byla významnou představitelkou českého národního obrození?",
-    "choices": ["Magdalena Dobromila Rettigová", "Karolina Světlá", "Božena Němcová", "Všechny uvedené"],
-    "correct": 3
+    "choices": [
+      "Magdalena Dobromila Rettigová",
+      "Karolina Světlá",
+      "Božena Němcová",
+      "Všechny uvedené"
+    ],
+    "correct": 3,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se jmenuje nejznámější česká loutka?",
-    "choices": ["Kašpárek", "Hurvínek", "Spejbl", "Všechny uvedené"],
-    "correct": 3
+    "choices": [
+      "Kašpárek",
+      "Hurvínek",
+      "Spejbl",
+      "Všechny uvedené"
+    ],
+    "correct": 3,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Která jeskyně v Moravském krasu umožňuje plavbu na lodičkách po podzemní říčce Punkvě?",
-    "choices": ["Kateřinská jeskyně", "Punkevní jeskyně", "Balcarka", "Sloupsko-šošůvské jeskyně"],
-    "correct": 1
+    "choices": [
+      "Kateřinská jeskyně",
+      "Punkevní jeskyně",
+      "Balcarka",
+      "Sloupsko-šošůvské jeskyně"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Který český judista získal zlatou olympijskou medaili v roce 2016 a 2020?",
-    "choices": ["Pavel Petřikov", "David Klammert", "Lukáš Krpálek", "Jaromír Musil"],
-    "correct": 2
+    "choices": [
+      "Pavel Petřikov",
+      "David Klammert",
+      "Lukáš Krpálek",
+      "Jaromír Musil"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se nazývá tradiční česká omáčka z kořenové zeleniny a smetany?",
-    "choices": ["Rajská omáčka", "Koprová omáčka", "Svíčková omáčka", "Houbová omáčka"],
-    "correct": 2
+    "choices": [
+      "Rajská omáčka",
+      "Koprová omáčka",
+      "Svíčková omáčka",
+      "Houbová omáčka"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Které město je známé těžbou černého uhlí a průmyslovou historií?",
-    "choices": ["Plzeň", "Ostrava", "Ústí nad Labem", "Most"],
-    "correct": 1
+    "choices": [
+      "Plzeň",
+      "Ostrava",
+      "Ústí nad Labem",
+      "Most"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Který český panovník založil Nové Město pražské?",
-    "choices": ["Václav II.", "Jan Lucemburský", "Karel IV.", "Václav IV."],
-    "correct": 2
+    "choices": [
+      "Václav II.",
+      "Jan Lucemburský",
+      "Karel IV.",
+      "Václav IV."
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Kdo je autorem knihy 'Bylo nás pět'?",
-    "choices": ["Josef Lada", "Karel Poláček", "Eduard Petiška", "František Nepil"],
-    "correct": 1
+    "choices": [
+      "Josef Lada",
+      "Karel Poláček",
+      "Eduard Petiška",
+      "František Nepil"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se jmenuje nejstarší kamenný most v Česku (a druhý nejstarší ve střední Evropě)?",
-    "choices": ["Karlův most (Praha)", "Kamenný most (Písek)", "Jelení lávka (Český Krumlov)", "Most Legií (Praha)"],
-    "correct": 1
+    "choices": [
+      "Karlův most (Praha)",
+      "Kamenný most (Písek)",
+      "Jelení lávka (Český Krumlov)",
+      "Most Legií (Praha)"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Která česká gymnastka získala 7 zlatých olympijských medailí?",
-    "choices": ["Eva Bosáková", "Věra Čáslavská", "Adolfína Tačová", "Anna Marejková"],
-    "correct": 1
+    "choices": [
+      "Eva Bosáková",
+      "Věra Čáslavská",
+      "Adolfína Tačová",
+      "Anna Marejková"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jaký masný výrobek je specialitou Prahy?",
-    "choices": ["Debrecínka", "Gothaj", "Lovecký salám", "Pražská šunka"],
-    "correct": 3
+    "choices": [
+      "Debrecínka",
+      "Gothaj",
+      "Lovecký salám",
+      "Pražská šunka"
+    ],
+    "correct": 3,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Které moravské město je známé Sloupem Nejsvětější Trojice (UNESCO)?",
-    "choices": ["Brno", "Znojmo", "Kroměříž", "Olomouc"],
-    "correct": 3
+    "choices": [
+      "Brno",
+      "Znojmo",
+      "Kroměříž",
+      "Olomouc"
+    ],
+    "correct": 3,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Kdo byl posledním přemyslovským králem, zavražděným v Olomouci?",
-    "choices": ["Přemysl Otakar II.", "Václav II.", "Václav III.", "Boleslav III."],
-    "correct": 2
+    "choices": [
+      "Přemysl Otakar II.",
+      "Václav II.",
+      "Václav III.",
+      "Boleslav III."
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se jmenuje česká opera o lišce od Leoše Janáčka?",
-    "choices": ["Rusalka", "Její pastorkyňa", "Příhody lišky Bystroušky", "Prodaná nevěsta"],
-    "correct": 2
+    "choices": [
+      "Rusalka",
+      "Její pastorkyňa",
+      "Příhody lišky Bystroušky",
+      "Prodaná nevěsta"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Který národní park je nejstarší v České republice?",
-    "choices": ["NP Šumava", "KRNAP (Krkonošský národní park)", "NP Podyjí", "NP České Švýcarsko"],
-    "correct": 1
+    "choices": [
+      "NP Šumava",
+      "KRNAP (Krkonošský národní park)",
+      "NP Podyjí",
+      "NP České Švýcarsko"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Který český vodní slalomář získal zlaté olympijské medaile?",
-    "choices": ["Vavřinec Hradilek", "Lukáš Rohan", "Jiří Prskavec", "Josef Dostál"],
-    "correct": 2
+    "choices": [
+      "Vavřinec Hradilek",
+      "Lukáš Rohan",
+      "Jiří Prskavec",
+      "Josef Dostál"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se nazývá tradiční český koláč s náplní uprostřed a sypáním nahoře?",
-    "choices": ["Buchta", "Závin", "Frgál", "Koláč (obecně)"],
-    "correct": 3
+    "choices": [
+      "Buchta",
+      "Závin",
+      "Frgál",
+      "Koláč (obecně)"
+    ],
+    "correct": 3,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Které město je známé jako 'Brána Šumavy'?",
-    "choices": ["Český Krumlov", "Prachatice", "Sušice", "Klatovy"],
-    "correct": 2
+    "choices": [
+      "Český Krumlov",
+      "Prachatice",
+      "Sušice",
+      "Klatovy"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Která událost v roce 1968 znamenala invazi vojsk Varšavské smlouvy?",
-    "choices": ["Pražské povstání", "Pražské jaro", "Sametová revoluce", "Únorový převrat"],
-    "correct": 1
+    "choices": [
+      "Pražské povstání",
+      "Pražské jaro",
+      "Sametová revoluce",
+      "Únorový převrat"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Kdo napsal 'Válku s mloky'?",
-    "choices": ["Josef Čapek", "Karel Čapek", "Vladislav Vančura", "Jiří Weil"],
-    "correct": 1
+    "choices": [
+      "Josef Čapek",
+      "Karel Čapek",
+      "Vladislav Vančura",
+      "Jiří Weil"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se jmenuje skalní útvar v Českém ráji, známý jako 'Hruboskalsko'?",
-    "choices": ["Adršpašské skály", "Prachovské skály", "Skalní město Hrubá Skála", "Tiské stěny"],
-    "correct": 2
+    "choices": [
+      "Adršpašské skály",
+      "Prachovské skály",
+      "Skalní město Hrubá Skála",
+      "Tiské stěny"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jaký post zastával Václav Havel před tím, než se stal prezidentem?",
-    "choices": ["Spisovatel a dramatik", "Herec", "Politik (poslanec)", "Novinář"],
-    "correct": 0
+    "choices": [
+      "Spisovatel a dramatik",
+      "Herec",
+      "Politik (poslanec)",
+      "Novinář"
+    ],
+    "correct": 0,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se jmenuje tradiční český bramborový salát podávaný k řízku?",
-    "choices": ["Lehký salát", "Pařížský salát", "Bramborový salát (s majonézou)", "Vídeňský salát"],
-    "correct": 2
+    "choices": [
+      "Lehký salát",
+      "Pařížský salát",
+      "Bramborový salát (s majonézou)",
+      "Vídeňský salát"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Které město je považováno za centrum Chodska?",
-    "choices": ["Klatovy", "Domažlice", "Tachov", "Plzeň"],
-    "correct": 1
+    "choices": [
+      "Klatovy",
+      "Domažlice",
+      "Tachov",
+      "Plzeň"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Který vojevůdce vedl husity po smrti Jana Žižky?",
-    "choices": ["Prokop Holý", "Jan Roháč z Dubé", "Mikuláš z Husi", "Bohuslav ze Švamberka"],
-    "correct": 0
+    "choices": [
+      "Prokop Holý",
+      "Jan Roháč z Dubé",
+      "Mikuláš z Husi",
+      "Bohuslav ze Švamberka"
+    ],
+    "correct": 0,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se jmenovala manželka Karla IV., pro kterou nechal postavit Karlštejn?",
-    "choices": ["Blanka z Valois", "Anna Falcká", "Anna Svídnická", "Alžběta Pomořanská"],
-    "correct": 3
+    "choices": [
+      "Blanka z Valois",
+      "Anna Falcká",
+      "Anna Svídnická",
+      "Alžběta Pomořanská"
+    ],
+    "correct": 3,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se jmenuje známá česká stavebnice pro děti?",
-    "choices": ["Lego", "Merkur", "Cheva", "Seva"],
-    "correct": 1
+    "choices": [
+      "Lego",
+      "Merkur",
+      "Cheva",
+      "Seva"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Která řeka tvoří část hranice mezi Českem a Německem v severních Čechách?",
-    "choices": ["Ohře", "Ploučnice", "Labe", "Nisa"],
-    "correct": 2
+    "choices": [
+      "Ohře",
+      "Ploučnice",
+      "Labe",
+      "Nisa"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Který český tým vyhrál hokejový turnaj na ZOH v Naganu 1998?",
-    "choices": ["Kanada", "Rusko", "Česká republika", "USA"],
-    "correct": 2
+    "choices": [
+      "Kanada",
+      "Rusko",
+      "Česká republika",
+      "USA"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se nazývá pokrm z mletého masa obalený v trojobalu a smažený?",
-    "choices": ["Sekaná", "Karbanátek", "Čevabčiči", "Masová koule"],
-    "correct": 1
+    "choices": [
+      "Sekaná",
+      "Karbanátek",
+      "Čevabčiči",
+      "Masová koule"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Které jihočeské město je známé svým historickým centrem (UNESCO) a zámkem?",
-    "choices": ["Jindřichův Hradec", "Tábor", "Český Krumlov", "Třeboň"],
-    "correct": 2
+    "choices": [
+      "Jindřichův Hradec",
+      "Tábor",
+      "Český Krumlov",
+      "Třeboň"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Která bitva je považována za nejslavnější vítězství Jana Žižky?",
-    "choices": ["Bitva u Sudoměře", "Bitva na Vítkově", "Bitva u Malešova", "Bitva u Lipan"],
-    "correct": 1
+    "choices": [
+      "Bitva u Sudoměře",
+      "Bitva na Vítkově",
+      "Bitva u Malešova",
+      "Bitva u Lipan"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Kdo je autorem cyklu symfonických básní 'Má vlast'?",
-    "choices": ["Antonín Dvořák", "Bedřich Smetana", "Leoš Janáček", "Josef Suk"],
-    "correct": 1
+    "choices": [
+      "Antonín Dvořák",
+      "Bedřich Smetana",
+      "Leoš Janáček",
+      "Josef Suk"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se jmenuje nejznámější moravská vinařská oblast?",
-    "choices": ["Znojemsko", "Mikulovsko", "Velkopavlovicko", "Všechny jsou významné"],
-    "correct": 3
+    "choices": [
+      "Znojemsko",
+      "Mikulovsko",
+      "Velkopavlovicko",
+      "Všechny jsou významné"
+    ],
+    "correct": 3,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Který český vynálezce je známý díky kontaktním čočkám?",
-    "choices": ["Jaroslav Heyrovský", "Jan Janský", "Otto Wichterle", "Karel Klíč"],
-    "correct": 2
+    "choices": [
+      "Jaroslav Heyrovský",
+      "Jan Janský",
+      "Otto Wichterle",
+      "Karel Klíč"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se nazývá tradiční česká zabijačková polévka?",
-    "choices": ["Gulášová polévka", "Prdelačka (zabijačková polévka)", "Dršťková polévka", "Zelňačka"],
-    "correct": 1
+    "choices": [
+      "Gulášová polévka",
+      "Prdelačka (zabijačková polévka)",
+      "Dršťková polévka",
+      "Zelňačka"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Které město v podhůří Orlických hor je známé výrobou tkanin (textilní průmysl)?",
-    "choices": ["Náchod", "Rychnov nad Kněžnou", "Ústí nad Orlicí", "Lanškroun"],
-    "correct": 2
+    "choices": [
+      "Náchod",
+      "Rychnov nad Kněžnou",
+      "Ústí nad Orlicí",
+      "Lanškroun"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Který rok je spojen se 'Sametovou revolucí'?",
-    "choices": ["1968", "1989", "1993", "1948"],
-    "correct": 1
+    "choices": [
+      "1968",
+      "1989",
+      "1993",
+      "1948"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Kdo je autorem knihy ' Povídky malostranské'?",
-    "choices": ["Jakub Arbes", "Jan Neruda", "Alois Jirásek", "Karel Václav Rais"],
-    "correct": 1
+    "choices": [
+      "Jakub Arbes",
+      "Jan Neruda",
+      "Alois Jirásek",
+      "Karel Václav Rais"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se jmenuje známý gotický hrad v Jihočeském kraji, původně královský?",
-    "choices": ["Hluboká nad Vltavou", "Zvíkov", "Rožmberk nad Vltavou", "Červená Lhota"],
-    "correct": 1
+    "choices": [
+      "Hluboká nad Vltavou",
+      "Zvíkov",
+      "Rožmberk nad Vltavou",
+      "Červená Lhota"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Která česká modelka je známá jako 'Andílek Victoria's Secret'?",
-    "choices": ["Eva Herzigová", "Tereza Maxová", "Karolína Kurková", "Hana Soukupová"],
-    "correct": 2
+    "choices": [
+      "Eva Herzigová",
+      "Tereza Maxová",
+      "Karolína Kurková",
+      "Hana Soukupová"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jaký druh knedlíků se tradičně podává k pečené kachně se zelím?",
-    "choices": ["Houskové knedlíky", "Bramborové knedlíky", "Karlovarské knedlíky", "Kynuté knedlíky"],
-    "correct": 1
+    "choices": [
+      "Houskové knedlíky",
+      "Bramborové knedlíky",
+      "Karlovarské knedlíky",
+      "Kynuté knedlíky"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Které město je největším městem na Vysočině?",
-    "choices": ["Třebíč", "Havlíčkův Brod", "Žďár nad Sázavou", "Jihlava"],
-    "correct": 3
+    "choices": [
+      "Třebíč",
+      "Havlíčkův Brod",
+      "Žďár nad Sázavou",
+      "Jihlava"
+    ],
+    "correct": 3,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Který panovnický rod vládl v českých zemích po Přemyslovcích?",
-    "choices": ["Habsburkové", "Jagellonci", "Lucemburkové", "Rožmberkové"],
-    "correct": 2
+    "choices": [
+      "Habsburkové",
+      "Jagellonci",
+      "Lucemburkové",
+      "Rožmberkové"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se jmenuje slavný český skladatel filmové hudby (např. Tři oříšky pro Popelku)?",
-    "choices": ["Petr Hapka", "Zdeněk Liška", "Karel Svoboda", "Luboš Fišer"],
-    "correct": 2
+    "choices": [
+      "Petr Hapka",
+      "Zdeněk Liška",
+      "Karel Svoboda",
+      "Luboš Fišer"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se jmenuje oblast pískovcových skal na hranici s Německem, známá Pravčickou bránou?",
-    "choices": ["Český ráj", "Adršpach", "České Švýcarsko", "Broumovské stěny"],
-    "correct": 2
+    "choices": [
+      "Český ráj",
+      "Adršpach",
+      "České Švýcarsko",
+      "Broumovské stěny"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Který český vynálezce objevil krevní skupiny?",
-    "choices": ["Jan Evangelista Purkyně", "Gregor Mendel", "Jan Janský", "Karel Absolon"],
-    "correct": 2
+    "choices": [
+      "Jan Evangelista Purkyně",
+      "Gregor Mendel",
+      "Jan Janský",
+      "Karel Absolon"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se nazývá tradiční vánoční cukroví z lineckého těsta?",
-    "choices": ["Pracny", "Vanilkové rohlíčky", "Linecké cukroví", "Vosí hnízda"],
-    "correct": 2
+    "choices": [
+      "Pracny",
+      "Vanilkové rohlíčky",
+      "Linecké cukroví",
+      "Vosí hnízda"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Které město je známé výrobou automobilů Škoda?",
-    "choices": ["Praha", "Plzeň", "Liberec", "Mladá Boleslav"],
-    "correct": 3
+    "choices": [
+      "Praha",
+      "Plzeň",
+      "Liberec",
+      "Mladá Boleslav"
+    ],
+    "correct": 3,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Kdo byl druhým prezidentem České republiky?",
-    "choices": ["Miloš Zeman", "Václav Klaus", "Josef Tošovský", "Václav Havel"],
-    "correct": 1
+    "choices": [
+      "Miloš Zeman",
+      "Václav Klaus",
+      "Josef Tošovský",
+      "Václav Havel"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Který český spisovatel je autorem 'Rozmarného léta'?",
-    "choices": ["Karel Poláček", "Vladislav Vančura", "Jaroslav Hašek", "Fráňa Šrámek"],
-    "correct": 1
+    "choices": [
+      "Karel Poláček",
+      "Vladislav Vančura",
+      "Jaroslav Hašek",
+      "Fráňa Šrámek"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se jmenuje největší vodopád v České republice?",
-    "choices": ["Mumlavský vodopád", "Pančavský vodopád", "Vodopády Bílé Opavy", "Rešovské vodopády"],
-    "correct": 1
+    "choices": [
+      "Mumlavský vodopád",
+      "Pančavský vodopád",
+      "Vodopády Bílé Opavy",
+      "Rešovské vodopády"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Který český fotbalový brankář je známý svou helmou?",
-    "choices": ["Jaromír Blažek", "Petr Čech", "Tomáš Vaclík", "Antonín Kinský"],
-    "correct": 1
+    "choices": [
+      "Jaromír Blažek",
+      "Petr Čech",
+      "Tomáš Vaclík",
+      "Antonín Kinský"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jaký pokrm je typický pro jižní Čechy, často z kapra?",
-    "choices": ["Kapr na modro", "Kapr na černo", "Kapří hranolky", "Všechny uvedené"],
-    "correct": 3
+    "choices": [
+      "Kapr na modro",
+      "Kapr na černo",
+      "Kapří hranolky",
+      "Všechny uvedené"
+    ],
+    "correct": 3,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Které město je známé svým historickým náměstím (UNESCO) a renesančními domy?",
-    "choices": ["Český Krumlov", "Kutná Hora", "Litomyšl", "Telč"],
-    "correct": 3
+    "choices": [
+      "Český Krumlov",
+      "Kutná Hora",
+      "Litomyšl",
+      "Telč"
+    ],
+    "correct": 3,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Která událost v roce 1948 znamenala převzetí moci komunisty?",
-    "choices": ["Pražské jaro", "Únorový převrat", "Mnichovská dohoda", "Vznik ČSR"],
-    "correct": 1
+    "choices": [
+      "Pražské jaro",
+      "Únorový převrat",
+      "Mnichovská dohoda",
+      "Vznik ČSR"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Kdo napsal a ilustroval 'Mikeše' a další knihy o kocourovi?",
-    "choices": ["Zdeněk Miler", "Ondřej Sekora", "Josef Lada", "Václav Čtvrtek"],
-    "correct": 2
+    "choices": [
+      "Zdeněk Miler",
+      "Ondřej Sekora",
+      "Josef Lada",
+      "Václav Čtvrtek"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se jmenuje chráněná krajinná oblast zahrnující Děvín a Pálavské vrchy?",
-    "choices": ["CHKO Bílé Karpaty", "CHKO Poodří", "CHKO Pálava", "CHKO Moravský kras"],
-    "correct": 2
+    "choices": [
+      "CHKO Bílé Karpaty",
+      "CHKO Poodří",
+      "CHKO Pálava",
+      "CHKO Moravský kras"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Která česká biatlonistka získala několik medailí na ZOH a MS?",
-    "choices": ["Veronika Vítková", "Markéta Davidová", "Gabriela Koukalová (Soukalová)", "Eva Puskarčíková"],
-    "correct": 2
+    "choices": [
+      "Veronika Vítková",
+      "Markéta Davidová",
+      "Gabriela Koukalová (Soukalová)",
+      "Eva Puskarčíková"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se nazývá tradiční sladká plněná buchta, typická pro Moravu?",
-    "choices": ["Perník", "Štrúdl", "Koláč (valašský frgál aj.)", "Bábovka"],
-    "correct": 2
+    "choices": [
+      "Perník",
+      "Štrúdl",
+      "Koláč (valašský frgál aj.)",
+      "Bábovka"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Které město je známé těžbou stříbra a Chrámem sv. Barbory (UNESCO)?",
-    "choices": ["Jihlava", "Příbram", "Jáchymov", "Kutná Hora"],
-    "correct": 3
+    "choices": [
+      "Jihlava",
+      "Příbram",
+      "Jáchymov",
+      "Kutná Hora"
+    ],
+    "correct": 3,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Který Přemyslovec byl prvním českým králem?",
-    "choices": ["Bořivoj I.", "Václav I. (Svatý)", "Vratislav II.", "Přemysl Otakar I."],
-    "correct": 2
+    "choices": [
+      "Bořivoj I.",
+      "Václav I. (Svatý)",
+      "Vratislav II.",
+      "Přemysl Otakar I."
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se jmenuje cyklus klavírních skladeb Bedřicha Smetany inspirovaný českou krajinou?",
-    "choices": ["Slovanské tance", "Po zarostlém chodníčku", "Sny", "České tance"],
-    "correct": 3
+    "choices": [
+      "Slovanské tance",
+      "Po zarostlém chodníčku",
+      "Sny",
+      "České tance"
+    ],
+    "correct": 3,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Která část Prahy je známá svým hradem a katedrálou sv. Víta?",
-    "choices": ["Staré Město", "Malá Strana", "Nové Město", "Hradčany"],
-    "correct": 3
+    "choices": [
+      "Staré Město",
+      "Malá Strana",
+      "Nové Město",
+      "Hradčany"
+    ],
+    "correct": 3,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se jmenuje český výrobce nákladních automobilů se sídlem v Kopřivnici?",
-    "choices": ["Avia", "LIAZ", "Praga", "Tatra"],
-    "correct": 3
+    "choices": [
+      "Avia",
+      "LIAZ",
+      "Praga",
+      "Tatra"
+    ],
+    "correct": 3,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se nazývá tradiční česká bramborová placka smažená na sádle?",
-    "choices": ["Langoš", "Topinka", "Bramborák", "Kroketa"],
-    "correct": 2
+    "choices": [
+      "Langoš",
+      "Topinka",
+      "Bramborák",
+      "Kroketa"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Které město je proslulé Mezinárodním filmovým festivalem?",
-    "choices": ["Praha", "Zlín", "Jihlava", "Karlovy Vary"],
-    "correct": 3
+    "choices": [
+      "Praha",
+      "Zlín",
+      "Jihlava",
+      "Karlovy Vary"
+    ],
+    "correct": 3,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Který český panovník byl zvolen římským císařem?",
-    "choices": ["Přemysl Otakar II.", "Karel IV.", "Rudolf II.", "Všichni uvedení"],
-    "correct": 3
+    "choices": [
+      "Přemysl Otakar II.",
+      "Karel IV.",
+      "Rudolf II.",
+      "Všichni uvedení"
+    ],
+    "correct": 3,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Kdo je autorem 'Malého Bobše'?",
-    "choices": ["Josef Věromír Pleva", "Eduard Petiška", "Václav Říha", "Bohumil Říha"],
-    "correct": 0
+    "choices": [
+      "Josef Věromír Pleva",
+      "Eduard Petiška",
+      "Václav Říha",
+      "Bohumil Říha"
+    ],
+    "correct": 0,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se jmenuje rozhledna na vrcholu Pradědu?",
-    "choices": ["Petřínská rozhledna", "Rozhledna Praděd (vysílač)", "Kurzova věž", "Ještěd"],
-    "correct": 1
+    "choices": [
+      "Petřínská rozhledna",
+      "Rozhledna Praděd (vysílač)",
+      "Kurzova věž",
+      "Ještěd"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Který český sport je známý jako 'nohejbal'?",
-    "choices": ["Volejbal", "Fotbaltenis", "Badminton", "Florbal"],
-    "correct": 1
+    "choices": [
+      "Volejbal",
+      "Fotbaltenis",
+      "Badminton",
+      "Florbal"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jaký typ omáčky se často podává k vařenému hovězímu masu s knedlíkem?",
-    "choices": ["Svíčková", "Rajská", "Koprová", "Křenová"],
-    "correct": 3
+    "choices": [
+      "Svíčková",
+      "Rajská",
+      "Koprová",
+      "Křenová"
+    ],
+    "correct": 3,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Které západočeské město je známé výrobou porcelánu?",
-    "choices": ["Plzeň", "Cheb", "Karlovy Vary (a okolí)", "Sokolov"],
-    "correct": 2
+    "choices": [
+      "Plzeň",
+      "Cheb",
+      "Karlovy Vary (a okolí)",
+      "Sokolov"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Která operace v roce 1942 byla atentátem na Reinharda Heydricha?",
-    "choices": ["Operace Silver A", "Operace Anthropoid", "Operace Out Distance", "Operace Bivouac"],
-    "correct": 1
+    "choices": [
+      "Operace Silver A",
+      "Operace Anthropoid",
+      "Operace Out Distance",
+      "Operace Bivouac"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Kdo je autorem 'Saturnina'?",
-    "choices": ["Karel Čapek", "Zdeněk Jirotka", "Eduard Bass", "Jaroslav Hašek"],
-    "correct": 1
+    "choices": [
+      "Karel Čapek",
+      "Zdeněk Jirotka",
+      "Eduard Bass",
+      "Jaroslav Hašek"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se jmenuje největší umělé jezero (přehrada) v ČR podle objemu zadržené vody?",
-    "choices": ["Lipno", "Orlík", "Slapy", "Šance"],
-    "correct": 1
+    "choices": [
+      "Lipno",
+      "Orlík",
+      "Slapy",
+      "Šance"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Která česká zpěvačka je známá jako 'Zlatá slavice'?",
-    "choices": ["Helena Vondráčková", "Hana Zagorová", "Marta Kubišová", "Lucie Bílá"],
-    "correct": 3
+    "choices": [
+      "Helena Vondráčková",
+      "Hana Zagorová",
+      "Marta Kubišová",
+      "Lucie Bílá"
+    ],
+    "correct": 3,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se nazývá tradiční český moučník z kynutého těsta s povidly nebo tvarohem?",
-    "choices": ["Závin", "Buchty", "Koláč", "Bábovka"],
-    "correct": 1
+    "choices": [
+      "Závin",
+      "Buchty",
+      "Koláč",
+      "Bábovka"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Které město je známé jako 'hanácká metropole'?",
-    "choices": ["Brno", "Prostějov", "Přerov", "Olomouc"],
-    "correct": 3
+    "choices": [
+      "Brno",
+      "Prostějov",
+      "Přerov",
+      "Olomouc"
+    ],
+    "correct": 3,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Který český kníže byl podle pověsti zavražděn svým bratrem Boleslavem?",
-    "choices": ["Bořivoj", "Spytihněv", "Vratislav", "Václav (Svatý)"],
-    "correct": 3
+    "choices": [
+      "Bořivoj",
+      "Spytihněv",
+      "Vratislav",
+      "Václav (Svatý)"
+    ],
+    "correct": 3,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se jmenuje slavná Dvořákova opera o vodní víle?",
-    "choices": ["Čert a Káča", "Jakobín", "Rusalka", "Dimitrij"],
-    "correct": 2
+    "choices": [
+      "Čert a Káča",
+      "Jakobín",
+      "Rusalka",
+      "Dimitrij"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Který český národní park je známý svými rašeliništi a ledovcovými jezery?",
-    "choices": ["NP Podyjí", "NP České Švýcarsko", "NP Šumava", "KRNAP"],
-    "correct": 2
+    "choices": [
+      "NP Podyjí",
+      "NP České Švýcarsko",
+      "NP Šumava",
+      "KRNAP"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se jmenuje česká videohra, kde hráč buduje středověkou vesnici v Čechách?",
-    "choices": ["Mafia", "Arma", "Factorio", "Kingdom Come: Deliverance"],
-    "correct": 3
+    "choices": [
+      "Mafia",
+      "Arma",
+      "Factorio",
+      "Kingdom Come: Deliverance"
+    ],
+    "correct": 3,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jaký tradiční alkoholický nápoj se vyrábí ze švestek?",
-    "choices": ["Meruňkovice", "Slivovice", "Hruškovice", "Jabkovice"],
-    "correct": 1
+    "choices": [
+      "Meruňkovice",
+      "Slivovice",
+      "Hruškovice",
+      "Jabkovice"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Které město je známé výrobou pian značky Petrof?",
-    "choices": ["Praha", "Brno", "Ostrava", "Hradec Králové"],
-    "correct": 3
+    "choices": [
+      "Praha",
+      "Brno",
+      "Ostrava",
+      "Hradec Králové"
+    ],
+    "correct": 3,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Který český panovník byl otcem Karla IV.?",
-    "choices": ["Václav II.", "Přemysl Otakar II.", "Jan Lucemburský", "Rudolf I."],
-    "correct": 2
+    "choices": [
+      "Václav II.",
+      "Přemysl Otakar II.",
+      "Jan Lucemburský",
+      "Rudolf I."
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Kdo je autorem dětských knih o Ferdovi Mravenci?",
-    "choices": ["Josef Lada", "Zdeněk Miler", "Ondřej Sekora", "Václav Čtvrtek"],
-    "correct": 2
+    "choices": [
+      "Josef Lada",
+      "Zdeněk Miler",
+      "Ondřej Sekora",
+      "Václav Čtvrtek"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se jmenuje nejvyšší hora Moravskoslezských Beskyd?",
-    "choices": ["Radhošť", "Smrk", "Kněhyně", "Lysá hora"],
-    "correct": 3
+    "choices": [
+      "Radhošť",
+      "Smrk",
+      "Kněhyně",
+      "Lysá hora"
+    ],
+    "correct": 3,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Který český režisér natočil film 'Kolja', oceněný Oscarem?",
-    "choices": ["Jiří Menzel", "Miloš Forman", "Jan Svěrák", "Věra Chytilová"],
-    "correct": 2
+    "choices": [
+      "Jiří Menzel",
+      "Miloš Forman",
+      "Jan Svěrák",
+      "Věra Chytilová"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se nazývá sladká, tvrdá oplatka, typická pro lázeňská města?",
-    "choices": ["Fidorka", "Tatranka", "Lázeňská oplatka", "Miňonka"],
-    "correct": 2
+    "choices": [
+      "Fidorka",
+      "Tatranka",
+      "Lázeňská oplatka",
+      "Miňonka"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Které město je známé svými pivovary Starobrno a Černá Hora?",
-    "choices": ["Olomouc", "Ostrava", "Plzeň", "Brno"],
-    "correct": 3
+    "choices": [
+      "Olomouc",
+      "Ostrava",
+      "Plzeň",
+      "Brno"
+    ],
+    "correct": 3,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Která žena byla první československou kosmonautkou (i když se do vesmíru nedostala)?",
-    "choices": ["Valentina Těreškovová", "Světlana Savická", "Vladimíra Remková", "Žádná nebyla"],
-    "correct": 2
+    "choices": [
+      "Valentina Těreškovová",
+      "Světlana Savická",
+      "Vladimíra Remková",
+      "Žádná nebyla"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se jmenuje hlavní postava z knihy 'Osudy dobrého vojáka Švejka'?",
-    "choices": ["Josef Švejk", "Marek Švejk", "Jan Švejk", "Petr Švejk"],
-    "correct": 0
+    "choices": [
+      "Josef Švejk",
+      "Marek Švejk",
+      "Jan Švejk",
+      "Petr Švejk"
+    ],
+    "correct": 0,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Které pohoří tvoří hranici s Německem v severozápadních Čechách?",
-    "choices": ["Krkonoše", "Šumava", "Jizerské hory", "Krušné hory"],
-    "correct": 3
+    "choices": [
+      "Krkonoše",
+      "Šumava",
+      "Jizerské hory",
+      "Krušné hory"
+    ],
+    "correct": 3,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Který český sportovec je známý jako 'Král bílé stopy'?",
-    "choices": ["Lukáš Bauer", "Martin Koukal", "Jiří Magál", "Nikdo nemá tuto přezdívku"],
-    "correct": 0
+    "choices": [
+      "Lukáš Bauer",
+      "Martin Koukal",
+      "Jiří Magál",
+      "Nikdo nemá tuto přezdívku"
+    ],
+    "correct": 0,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se jmenuje tradiční český pokrm z vařených brambor a mouky, často podávaný se zelím?",
-    "choices": ["Halušky", "Noky", "Škubánky", "Bramborové šišky"],
-    "correct": 2
+    "choices": [
+      "Halušky",
+      "Noky",
+      "Škubánky",
+      "Bramborové šišky"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Které město bylo ve středověku druhým nejvýznamnějším městem po Praze?",
-    "choices": ["Brno", "Olomouc", "Plzeň", "Kutná Hora"],
-    "correct": 3
+    "choices": [
+      "Brno",
+      "Olomouc",
+      "Plzeň",
+      "Kutná Hora"
+    ],
+    "correct": 3,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Která událost v roce 1618 je považována za počátek třicetileté války?",
-    "choices": ["Bitva na Bílé hoře", "Pražská defenestrace", "Poprava 27 pánů", "Korunovace Fridricha Falckého"],
-    "correct": 1
+    "choices": [
+      "Bitva na Bílé hoře",
+      "Pražská defenestrace",
+      "Poprava 27 pánů",
+      "Korunovace Fridricha Falckého"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Kdo napsal slavnou dětskou knihu 'Dášeňka čili život štěněte'?",
-    "choices": ["Josef Lada", "Karel Čapek", "Ondřej Sekora", "Eduard Petiška"],
-    "correct": 1
+    "choices": [
+      "Josef Lada",
+      "Karel Čapek",
+      "Ondřej Sekora",
+      "Eduard Petiška"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se jmenuje skalní brána v Českém Švýcarsku, největší v Evropě?",
-    "choices": ["Malá Pravčická brána", "Pravčická brána", "Tiské stěny", "Jetřichovické vyhlídky"],
-    "correct": 1
+    "choices": [
+      "Malá Pravčická brána",
+      "Pravčická brána",
+      "Tiské stěny",
+      "Jetřichovické vyhlídky"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se jmenuje česká firma vyrábějící antivirotika?",
-    "choices": ["Zentiva", "Gilead Sciences (spolupráce s Holým)", "Teva", "Farmak"],
-    "correct": 1
+    "choices": [
+      "Zentiva",
+      "Gilead Sciences (spolupráce s Holým)",
+      "Teva",
+      "Farmak"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se nazývá tradiční kulatý perník zdobený polevou?",
-    "choices": ["Pardubický perník", "Medovník", "Perníčky (obecně)", "Zázvorka"],
-    "correct": 0
+    "choices": [
+      "Pardubický perník",
+      "Medovník",
+      "Perníčky (obecně)",
+      "Zázvorka"
+    ],
+    "correct": 0,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Které město je známé výrobou traktorů Zetor?",
-    "choices": ["Mladá Boleslav", "Plzeň", "Brno", "Kopřivnice"],
-    "correct": 2
+    "choices": [
+      "Mladá Boleslav",
+      "Plzeň",
+      "Brno",
+      "Kopřivnice"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Kdo byl manželem královny Elišky Přemyslovny a otcem Karla IV.?",
-    "choices": ["Rudolf I. Habsburský", "Jindřich Korutanský", "Jan Lucemburský", "Ludvík Bavor"],
-    "correct": 2
+    "choices": [
+      "Rudolf I. Habsburský",
+      "Jindřich Korutanský",
+      "Jan Lucemburský",
+      "Ludvík Bavor"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se jmenuje hlavní postava z večerníčku 'Pat a Mat'?",
-    "choices": ["Jsou to Pat a Mat", "Ferda a Brouk Pytlík", "Mach a Šebestová", "Bob a Bobek"],
-    "correct": 0
+    "choices": [
+      "Jsou to Pat a Mat",
+      "Ferda a Brouk Pytlík",
+      "Mach a Šebestová",
+      "Bob a Bobek"
+    ],
+    "correct": 0,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Které pohoří se nachází na severní Moravě a ve Slezsku?",
-    "choices": ["Beskydy", "Jeseníky", "Rychlebské hory", "Všechny uvedené"],
-    "correct": 3
+    "choices": [
+      "Beskydy",
+      "Jeseníky",
+      "Rychlebské hory",
+      "Všechny uvedené"
+    ],
+    "correct": 3,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Který český film získal Oscara za nejlepší cizojazyčný film v roce 1996?",
-    "choices": ["Pelíšky", "Kolja", "Musíme si pomáhat", "Želary"],
-    "correct": 1
+    "choices": [
+      "Pelíšky",
+      "Kolja",
+      "Musíme si pomáhat",
+      "Želary"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se nazývá tradiční sýrová pomazánka s česnekem?",
-    "choices": ["Hermelínová pomazánka", "Budapešťská pomazánka", "Česneková pomazánka", "Vajíčková pomazánka"],
-    "correct": 2
+    "choices": [
+      "Hermelínová pomazánka",
+      "Budapešťská pomazánka",
+      "Česneková pomazánka",
+      "Vajíčková pomazánka"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Které město je známé výrobou tužek Koh-i-noor?",
-    "choices": ["Plzeň", "České Budějovice", "Liberec", "Brno"],
-    "correct": 1
+    "choices": [
+      "Plzeň",
+      "České Budějovice",
+      "Liberec",
+      "Brno"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Která česká kněžna podle pověsti věštila slávu Prahy?",
-    "choices": ["Drahomíra", "Libuše", "Ludmila", "Mlada"],
-    "correct": 1
+    "choices": [
+      "Drahomíra",
+      "Libuše",
+      "Ludmila",
+      "Mlada"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Kdo složil hudbu k opeře 'Rusalka'?",
-    "choices": ["Bedřich Smetana", "Leoš Janáček", "Antonín Dvořák", "Josef Suk"],
-    "correct": 2
+    "choices": [
+      "Bedřich Smetana",
+      "Leoš Janáček",
+      "Antonín Dvořák",
+      "Josef Suk"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se jmenuje největší komplex rybníků v jižních Čechách?",
-    "choices": ["Novohradské rybníky", "Třeboňská rybniční soustava", "Budějovická pánev", "Blatské rybníky"],
-    "correct": 1
+    "choices": [
+      "Novohradské rybníky",
+      "Třeboňská rybniční soustava",
+      "Budějovická pánev",
+      "Blatské rybníky"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Která česká videohra simuluje řízení kamionu po Evropě?",
-    "choices": ["Spintires", "SnowRunner", "Fernbus Simulator", "Euro Truck Simulator 2"],
-    "correct": 3
+    "choices": [
+      "Spintires",
+      "SnowRunner",
+      "Fernbus Simulator",
+      "Euro Truck Simulator 2"
+    ],
+    "correct": 3,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se jmenuje tradiční vánoční pečivo ve tvaru půlměsíce?",
-    "choices": ["Linecké cukroví", "Pracny", "Vanilkové rohlíčky", "Vosí hnízda"],
-    "correct": 2
+    "choices": [
+      "Linecké cukroví",
+      "Pracny",
+      "Vanilkové rohlíčky",
+      "Vosí hnízda"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Které město je známé výrobou hodinek Prim?",
-    "choices": ["Liberec", "Nový Bor", "Nový Jičín", "Nové Město nad Metují"],
-    "correct": 3
+    "choices": [
+      "Liberec",
+      "Nový Bor",
+      "Nový Jičín",
+      "Nové Město nad Metují"
+    ],
+    "correct": 3,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se jmenoval bratr svatého Václava?",
-    "choices": ["Spytihněv", "Vratislav", "Boleslav (Ukrytý)", "Strojmír"],
-    "correct": 2
+    "choices": [
+      "Spytihněv",
+      "Vratislav",
+      "Boleslav (Ukrytý)",
+      "Strojmír"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Který český malíř je známý svou 'Slovanskou epopejí'?",
-    "choices": ["Mikoláš Aleš", "Josef Mánes", "Alfons Mucha", "Max Švabinský"],
-    "correct": 2
+    "choices": [
+      "Mikoláš Aleš",
+      "Josef Mánes",
+      "Alfons Mucha",
+      "Max Švabinský"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se jmenuje nejteplejší a nejsušší oblast v České republice?",
-    "choices": ["Polabí", "Jižní Morava", "Pražská kotlina", "Mostecká pánev"],
-    "correct": 1
+    "choices": [
+      "Polabí",
+      "Jižní Morava",
+      "Pražská kotlina",
+      "Mostecká pánev"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se jmenuje česká logická videohra s malým robotem Josefem?",
-    "choices": ["Samorost", "Botanicula", "Creaks", "Machinarium"],
-    "correct": 3
+    "choices": [
+      "Samorost",
+      "Botanicula",
+      "Creaks",
+      "Machinarium"
+    ],
+    "correct": 3,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jaký typ knedlíku se podává ke guláši?",
-    "choices": ["Bramborový", "Houskový", "Karlovarský", "Špekový"],
-    "correct": 1
+    "choices": [
+      "Bramborový",
+      "Houskový",
+      "Karlovarský",
+      "Špekový"
+    ],
+    "correct": 1,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Které město je známé výrobou ručního papíru ve Velkých Losinách?",
-    "choices": ["Šumperk", "Jeseník", "Zábřeh", "Velké Losiny (u Šumperka)"],
-    "correct": 3
+    "choices": [
+      "Šumperk",
+      "Jeseník",
+      "Zábřeh",
+      "Velké Losiny (u Šumperka)"
+    ],
+    "correct": 3,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Který panovník přesunul své sídlo do Prahy a učinil z ní centrum Svaté říše římské?",
-    "choices": ["Přemysl Otakar II.", "Jan Lucemburský", "Karel IV.", "Rudolf II."],
-    "correct": 2
+    "choices": [
+      "Přemysl Otakar II.",
+      "Jan Lucemburský",
+      "Karel IV.",
+      "Rudolf II."
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Kdo je autorem knihy 'Fimfárum'?",
-    "choices": ["Jan Werich", "Miloš Macourek", "Zdeněk Svěrák", "Adolf Born"],
-    "correct": 0
+    "choices": [
+      "Jan Werich",
+      "Miloš Macourek",
+      "Zdeněk Svěrák",
+      "Adolf Born"
+    ],
+    "correct": 0,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se jmenuje nejvýše položená obec v České republice?",
-    "choices": ["Boží Dar", "Modrava", "Kvilda", "Horní Malá Úpa"],
-    "correct": 2
+    "choices": [
+      "Boží Dar",
+      "Modrava",
+      "Kvilda",
+      "Horní Malá Úpa"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Která česká hra byla jednou z prvních celosvětově úspěšných 3D stříleček?",
-    "choices": ["Mafia", "Operation Flashpoint / Arma", "Hidden & Dangerous", "Vietcong"],
-    "correct": 2
+    "choices": [
+      "Mafia",
+      "Operation Flashpoint / Arma",
+      "Hidden & Dangerous",
+      "Vietcong"
+    ],
+    "correct": 2,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Jak se nazývá tradiční kynuté pečivo s mákem nebo tvarohem, často zdobené mandlemi?",
-    "choices": ["Vánočka", "Mazanec", "Jidáše", "Martinský rohlík"],
-    "correct": 0
+    "choices": [
+      "Vánočka",
+      "Mazanec",
+      "Jidáše",
+      "Martinský rohlík"
+    ],
+    "correct": 0,
+    "category": "General",
+    "difficulty": "medium"
   },
   {
     "text": "Které město je známé výrobou zapalovačů značky Clipper (historicky firma Flamagas)?",
-    "choices": ["Český Těšín", "Frýdek-Místek", "Karviná", "Ostrava"],
-    "correct": 0
+    "choices": [
+      "Český Těšín",
+      "Frýdek-Místek",
+      "Karviná",
+      "Ostrava"
+    ],
+    "correct": 0,
+    "category": "General",
+    "difficulty": "medium"
   }
 ]
