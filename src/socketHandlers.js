@@ -6,9 +6,9 @@ const { areAdjacent, serializeRoomState } = require("./utils");
 const { createBot, chooseRandomAnswer, chooseDraftPick, chooseAction } = require("../bots/simpleBot");
 
 /* === CONSTANTS ========================================================= */
-const PREP_TIME = 3; // Increased slightly
-const ANSWER_TIME = 15; // Increased slightly
-const REVEAL_TIME = 5; // Increased slightly
+const PREP_TIME = parseFloat(process.env.PREP_TIME || 3);
+const ANSWER_TIME = parseFloat(process.env.ANSWER_TIME || 15);
+const REVEAL_TIME = parseFloat(process.env.REVEAL_TIME || 5);
 const MAX_PLAYERS = 6;
 const MIN_PLAYERS = 2;
 const DRAFT_WINNER_PICKS = 2;
@@ -1521,11 +1521,23 @@ function endGame(roomId, reason) {
 
 function clearRoomTimers(room) {
     if (!room) return;
+    const timers = ["prepTimer", "questionTimer", "revealTimer"];
     let clearedCount = 0;
-    if (room.prepTimer) { clearTimeout(room.prepTimer); room.prepTimer = null; clearedCount++; }
-    if (room.questionTimer) { clearTimeout(room.questionTimer); room.questionTimer = null; clearedCount++; }
-    if (room.revealTimer) { clearTimeout(room.revealTimer); room.revealTimer = null; clearedCount++; }
-    // if (clearedCount > 0) console.log(`[${room.id}] Cleared ${clearedCount} timers.`);
+    for (const t of timers) {
+        if (room[t]) {
+            clearTimeout(room[t]);
+            room[t] = null;
+            clearedCount++;
+        }
+    }
+    for (const t of timers) {
+        if (room[t]) {
+            console.warn(`[${room.id}] Timer ${t} was not cleared properly.`);
+        }
+    }
+    if (clearedCount > 0) {
+        console.log(`[${room.id}] Cleared ${clearedCount} timers.`);
+    }
 }
 
 };
