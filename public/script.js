@@ -65,6 +65,7 @@ function renderHome() {
         <div id="home-card" class="card">
             <h1>Dobyvatel ČR</h1>
             <input id="name" class="input" placeholder="Tvé jméno" value="${state.myName || ''}" />
+            <input id="bots" class="input" type="number" min="0" max="5" value="0" placeholder="Počet botů" />
             <button id="create">Vytvořit hru</button>
             <input id="code" class="input" placeholder="Kód místnosti (6 znaků)" />
             <button id="join" class="secondary">Připojit se ke hře</button>
@@ -72,7 +73,8 @@ function renderHome() {
         </div>`;
     $("#create").onclick = () => {
         const name = $("#name").value.trim(); if (!name) { $("#home-error").textContent = "Zadejte prosím jméno."; return; }
-        $("#home-error").textContent = ""; state.myName = name; socket.emit("create", { name }, handleRoomResponse);
+        const bots = parseInt($("#bots").value, 10) || 0;
+        $("#home-error").textContent = ""; state.myName = name; socket.emit("create", { name, bots }, handleRoomResponse);
     };
     $("#join").onclick = () => {
         const name = $("#name").value.trim(); const code = $("#code").value.trim().toUpperCase(); if (!name || !code || code.length !== 6) { $("#home-error").textContent = "Zadejte jméno a platný 6místný kód."; return; }
