@@ -36,7 +36,7 @@ mapSvgPromise = (async () => {
 
 
 let state = {
-    view: "home", roomId: "", myId: "", myName: "", players: [], initialPlayerOrder: [],
+    view: "home", roomId: "", myId: "", myName: "", reconnectToken: "", players: [], initialPlayerOrder: [],
     territories: [], phase: "lobby", turnIndex: 0, myTurn: false, activePlayerId: null,
     question: null, prepTime: 0, lastResult: null, turnCounter: 0, turnData: null,
     lastRevealedQuestion: null,
@@ -76,7 +76,7 @@ function renderHome() {
     };
     $("#join").onclick = () => {
         const name = $("#name").value.trim(); const code = $("#code").value.trim().toUpperCase(); if (!name || !code || code.length !== 6) { $("#home-error").textContent = "Zadejte jméno a platný 6místný kód."; return; }
-        $("#home-error").textContent = ""; state.myName = name; state.roomId = code; socket.emit("join", { roomId: state.roomId, name }, handleRoomResponse);
+        socket.emit("join", { roomId: state.roomId, name: state.myName, token: state.reconnectToken }, (res) => {
     };
 }
 
@@ -86,7 +86,7 @@ function handleRoomResponse(res) {
         const errorEl = $("#home-error"); if(errorEl) errorEl.textContent = "Chyba: " + res.error;
     } else {
         console.log("Room created/joined successfully:", res);
-        state.roomId = res.roomId; state.myId = socket.id; state.players = res.players; state.view = "lobby";
+        state.roomId = res.roomId; state.myId = socket.id; state.players = res.players; state.reconnectToken = res.token || ""; localStorage.setItem("dobyvatel_token", state.reconnectToken); state.view = "lobby";
         render();
     }
 }
@@ -753,18 +753,20 @@ socket.on("connect", () => {
     if (state.roomId && state.view !== 'home') {
         console.log(`Attempting to rejoin room ${state.roomId} as ${state.myName} (Previous ID: ${oldId}, New ID: ${state.myId})`);
         // Use the new socket.id for rejoining
-        socket.emit("join", { roomId: state.roomId, name: state.myName }, (res) => {
+        socket.emit("join", { roomId: state.roomId, name: state.myName, token: state.reconnectToken }, (res) => {
             if (res.error) {
                 console.error("Rejoin failed:", res.error);
                 alert("Připojení k místnosti selhalo: " + res.error + "\nBudete vráceni na hlavní obrazovku.");
                 // Reset state completely and go home
-                state = { view: "home", myId: socket.id, myName: state.myName, roomId: "", players: [], territories: [], phase: 'lobby', turnIndex: 0, myTurn: false, activePlayerId: null, question: null, prepTime: 0, lastResult: null, turnCounter: 0, turnData: null, initialPlayerOrder: [], lastRevealedQuestion: null };
+                state = { view: "home", myId: socket.id, myName: state.myName, roomId: "", players: [], territories: [], phase: 'lobby', turnIndex: 0, myTurn: false, activePlayerId: null, question: null, prepTime: 0, lastResult: null, turnCounter: 0, turnData: null, initialPlayerOrder: [], lastRevealedQuestion: null, reconnectToken: "" };
                 render();
             } else {
                 console.log("Rejoined successfully. Waiting for state update.");
                 // Server should send a full 'state' update shortly after successful rejoin
                 state.roomId = res.roomId; // Ensure roomId is correct from response
                 state.players = res.players; // Update player list immediately
+                state.reconnectToken = res.token || "";
+                localStorage.setItem("dobyvatel_token", state.reconnectToken);
                 // Don't set view yet, wait for 'state' event
             }
         });
@@ -835,6 +837,7 @@ socket.on("state", (newState) => {
     state = { ...newState }; // Copy received state
     state.myId = myId;       // Restore my ID
     state.myName = myName;   // Restore my name
+    state.reconnectToken = localStorage.getItem("dobyvatel_token") || state.reconnectToken;
 
     // Ensure crucial arrays are arrays, provide defaults if missing
     state.players = Array.isArray(newState.players) ? newState.players : [];
@@ -1034,6 +1037,7 @@ function areAdjacentClient(r1, r2) {
 
 // Load player name from localStorage
 state.myName = localStorage.getItem("dobyvatel_playerName") || "";
+state.reconnectToken = localStorage.getItem("dobyvatel_token") || "";
 
 // Save player name to localStorage on input change
 document.addEventListener('input', (e) => {
