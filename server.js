@@ -1,4 +1,5 @@
 const path = require('path');
+const fs = require('fs');
 const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
@@ -16,6 +17,24 @@ function createServer() {
   });
 
   registerSocketHandlers(io);
+
+  app.get('/scores', (req, res) => {
+    const file = path.join(__dirname, 'scores.json');
+    fs.readFile(file, 'utf8', (err, data) => {
+      if (err) {
+        if (err.code === 'ENOENT') return res.json([]);
+        console.error('Error reading scores file:', err);
+        return res.status(500).json({ error: 'Unable to read scores' });
+      }
+      try {
+        const scores = JSON.parse(data || '[]');
+        res.json(scores);
+      } catch (e) {
+        console.error('Error parsing scores file:', e);
+        res.status(500).json({ error: 'Unable to read scores' });
+      }
+    });
+  });
 
   app.use(express.static(path.join(__dirname, 'public')));
 

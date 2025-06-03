@@ -21,6 +21,38 @@ function botSocket(id) {
     return { id, emit: () => {} };
 }
 
+// === SCORE STORAGE =====================================================
+const SCORES_FILE = path.join(__dirname, "..", "scores.json");
+
+function loadScores() {
+    try {
+        if (fs.existsSync(SCORES_FILE)) {
+            const data = fs.readFileSync(SCORES_FILE, "utf8");
+            return JSON.parse(data || "[]");
+        }
+    } catch (err) {
+        console.error("Error reading scores file:", err);
+    }
+    return [];
+}
+
+function saveScores(scores) {
+    try {
+        fs.writeFileSync(SCORES_FILE, JSON.stringify(scores, null, 2));
+    } catch (err) {
+        console.error("Error writing scores file:", err);
+    }
+}
+
+function addScore(entry) {
+    const scores = loadScores();
+    scores.push(entry);
+    if (scores.length > 50) {
+        scores.splice(0, scores.length - 50); // keep last 50 games
+    }
+    saveScores(scores);
+}
+
 // Region IDs
 const REGIONS = ["PHA", "STC", "JHC", "PLK", "KVK", "ULK", "LBK", "HKK", "PAK", "OLK", "MSK", "JHM", "ZLK", "VYS"];
 
@@ -1498,6 +1530,19 @@ function endGame(roomId, reason) {
 
     // Log final ranking
     console.log(`[${roomId}] Final ranking: ${room.players.map((p, i) => `${i + 1}. ${p.name} (${p.score || 0}b, ${p.territories?.length || 0}T)`).join('; ')}`);
+
+    // Persist game results
+    const scoreEntry = {
+        time: new Date().toISOString(),
+        reason,
+        players: room.players.map(p => ({
+            name: p.name,
+            score: p.score || 0,
+            territories: Array.isArray(p.territories) ? p.territories.length : 0,
+            team: p.team
+        }))
+    };
+    addScore(scoreEntry);
 
     // Prepare final state and game over payload
     const finalState = serializeRoomState(room); // Get the final state object
