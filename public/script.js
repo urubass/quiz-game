@@ -46,6 +46,50 @@ let state = {
     lastRevealedQuestion: null, categories: [],
 };
 
+// Flag to ignore disconnect overlay when leaving intentionally
+let intentionalLeave = false;
+
+function clearRoomState() {
+    const myName = state.myName;
+    state = {
+        view: "home",
+        roomId: "",
+        myId: "",
+        myName,
+        players: [],
+        initialPlayerOrder: [],
+        territories: [],
+        phase: "lobby",
+        turnIndex: 0,
+        myTurn: false,
+        activePlayerId: null,
+        question: null,
+        prepTime: 0,
+        lastResult: null,
+        turnCounter: 0,
+        turnData: null,
+        lastRevealedQuestion: null,
+        categories: [],
+    };
+}
+
+function handleLeave() {
+    intentionalLeave = true;
+    clearRoomState();
+    render();
+    socket.disconnect();
+    // reconnection happens in disconnect handler
+}
+
+function createLeaveButton() {
+    const btn = document.createElement("button");
+    btn.id = "leave";
+    btn.textContent = "Opustit hru";
+    btn.classList.add("secondary");
+    btn.onclick = handleLeave;
+    return btn;
+}
+
 let questionTimerInterval = null;
 let prepTimerInterval = null;
 const MIN_PLAYERS_CLIENT = 2; // Sync with server MIN_PLAYERS if changed
@@ -120,6 +164,8 @@ function renderLobby() {
             <button id="start" class="secondary" disabled>Start hry</button>
             <p id="lobby-info" style="margin-top: 1rem; min-height: 1.2em;"></p>
         </div>`;
+    const card = $("#lobby-card");
+    if (card) card.appendChild(createLeaveButton());
     updatePlayerList();
     setupLobbyButtons();
 }
@@ -215,6 +261,9 @@ async function renderGame() {
         </div>
         <div id="turn-order-display"></div>
         `;
+
+    const sidebar = $("#sidebar");
+    if (sidebar) sidebar.appendChild(createLeaveButton());
 
     // Use requestAnimationFrame to ensure the DOM is updated before trying to manipulate it
     requestAnimationFrame(() => {
@@ -826,6 +875,12 @@ socket.on("connect", () => {
     }
 });
 socket.on("disconnect", (reason) => {
+    if (intentionalLeave) {
+        // Immediately reconnect for clean state without showing error overlay
+        intentionalLeave = false;
+        socket.connect();
+        return;
+    }
     console.error("Disconnected:", reason);
     hideModal(); // Hide modal on disconnect
     // Display a message indicating disconnection
