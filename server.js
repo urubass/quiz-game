@@ -24,6 +24,7 @@ const DRAFT_WINNER_PICKS = 2;
 const DRAFT_OTHERS_PICKS = 1;
 const MAX_TURNS = 50;
 const FIRST_PICK_BONUS = 100; // Bonus score for first territory claimed in draft
+const RECONNECT_TOKEN_LIFETIME = 60*1000;
 
 // Region IDs
 const REGIONS = ["PHA", "STC", "JHC", "PLK", "KVK", "ULK", "LBK", "HKK", "PAK", "OLK", "MSK", "JHM", "ZLK", "VYS"];
@@ -65,6 +66,10 @@ function generateRoomId() {
     // Ensure uniqueness
     return rooms[result] ? generateRoomId() : result;
 }
+function generateReconnectToken() {
+    return require("crypto").randomBytes(8).toString("hex");
+}
+
 
 // Helper function to get a player object from a room
 function getPlayer(room, playerId) {
@@ -97,6 +102,8 @@ io.on("connection", (socket) => {
             const roomId = generateRoomId();
             const hostPlayer = {
                 id: socket.id,
+                reconnectToken: generateReconnectToken(),
+                tokenExpiry: Date.now() + RECONNECT_TOKEN_LIFETIME,
                 name: name.trim() || `Hráč_${socket.id.substring(0, 4)}`,
                 score: 0,
                 ready: false, // Host isn't ready by default
@@ -126,14 +133,14 @@ io.on("connection", (socket) => {
             socket.join(roomId);
             console.log(`[${roomId}] Room created by ${hostPlayer.name} (${socket.id})`);
             // Send back the necessary info
-            callback({ roomId, players: rooms[roomId].players });
+            callback({ roomId, players: rooms[roomId].players, token: hostPlayer.reconnectToken });
         } catch (error) {
             console.error("Error creating room:", error);
             callback({ error: "Nepodařilo se vytvořit místnost. Zkuste to prosím znovu." });
         }
     });
 
-    socket.on("join", ({ roomId, name }, callback) => {
+    socket.on("join", ({ roomId, name, token }, callback) => {
         // Input validation
         if (typeof roomId !== 'string' || roomId.length !== 6) {
             return callback({ error: "Neplatný kód místnosti." });
@@ -163,21 +170,23 @@ io.on("connection", (socket) => {
             return callback({ roomId, players: room.players });
         }
 
+
+
         if (potentialReconnectPlayer && room.phase !== 'lobby' && room.phase !== 'finished') {
             // Found a player with the same name, game in progress - likely a reconnect
             console.log(`[${roomId}] Player ${trimmedName} (${socket.id}) attempting to reconnect. Assigning old player data.`);
+            if (potentialReconnectPlayer.reconnectToken !== token || Date.now() > (potentialReconnectPlayer.tokenExpiry || 0)) {
+                return callback({ error: "Neplatný nebo expirovaný token." });
+            }
             const oldSocketId = potentialReconnectPlayer.id;
-            potentialReconnectPlayer.id = socket.id; // Update the player's socket ID
+            potentialReconnectPlayer.id = socket.id;
+            potentialReconnectPlayer.reconnectToken = generateReconnectToken();
+            potentialReconnectPlayer.tokenExpiry = Date.now() + RECONNECT_TOKEN_LIFETIME;
             socket.join(roomId);
-
-            // Notify others about the potential ID change (though name stays the same)
-            io.to(roomId).emit("players", room.players); // Send updated player list (with new ID)
-            // Send the full current game state to the reconnected player
+            io.to(roomId).emit("players", room.players);
             socket.emit("state", serializeRoomState(room));
             console.log(`[${roomId}] Reconnection successful for ${trimmedName}. Old ID: ${oldSocketId}, New ID: ${socket.id}`);
-            return callback({ roomId, players: room.players }); // Confirm join/reconnect
-        }
-        // --- End Reconnection Logic ---
+            return callback({ roomId, players: room.players, token: potentialReconnectPlayer.reconnectToken });
 
 
         // Standard join logic
@@ -195,6 +204,8 @@ io.on("connection", (socket) => {
         try {
             const newPlayer = {
                 id: socket.id,
+                reconnectToken: generateReconnectToken(),
+                tokenExpiry: Date.now() + RECONNECT_TOKEN_LIFETIME,
                 name: trimmedName || `Hráč_${socket.id.substring(0, 4)}`,
                 score: 0,
                 ready: false,
@@ -206,7 +217,7 @@ io.on("connection", (socket) => {
             console.log(`[${roomId}] ${newPlayer.name} (${socket.id}) joined room.`);
             // Emit updated player list to everyone in the room
             io.to(roomId).emit("players", room.players);
-            callback({ roomId, players: room.players }); // Confirm join
+            callback({ roomId, players: room.players, token: newPlayer.reconnectToken }); // Confirm join
         } catch (error) {
             console.error(`[${roomId}] Error adding player ${trimmedName}:`, error);
             callback({ error: "Nepodařilo se připojit k místnosti." });
