@@ -12,7 +12,8 @@ function createBot(name = 'Bot') {
     ready: true,
     territories: [],
     isBot: true,
-    initialOrder: 0
+    initialOrder: 0,
+    spectator: false
   };
 }
 
