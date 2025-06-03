@@ -940,20 +940,13 @@ socket.on("reveal", ({ correctIndex, playerAnswers, resultText }) => {
 
                     if (index === correctIndex) {
                         btn.classList.add('correct');
+                        if (myAnswerIndex === index) {
+                            btn.classList.add('my-answer');
+                        }
                         btn.style.opacity = '1'; // Highlight correct
                     } else if (myAnswerIndex === index) {
                         // My answer was incorrect
-                        btn.classList.add('incorrect');
-                        btn.classList.add('my-answer'); // Mark my incorrect answer
-                        btn.style.opacity = '1';
-                    } else if (myAnswerIndex === index && myAnswerIndex === correctIndex) {
-                        // This case is covered by index === correctIndex, but we can add my-answer class
-                        btn.classList.add('my-answer');
-                    }
-
-                    // Mark my correct answer explicitly if needed
-                    if (myAnswerIndex === index && myAnswerIndex === correctIndex) {
-                        btn.classList.add('my-answer');
+                        btn.classList.add('incorrect', 'my-answer');
                         btn.style.opacity = '1';
                     }
                 });
